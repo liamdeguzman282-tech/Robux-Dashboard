@@ -42,4 +42,23 @@ router.get("/roblox/avatar", async (req, res) => {
   }
 });
 
+router.get("/roblox/font", async (_req, res) => {
+  try {
+    const fontRes = await fetch(
+      "https://static.rbxcdn.com/css/images/fbf/RobloxFont.woff2",
+      { headers: { "User-Agent": "Mozilla/5.0" } }
+    );
+    if (!fontRes.ok) {
+      res.status(502).json({ error: "font fetch failed" });
+      return;
+    }
+    const buf = await fontRes.arrayBuffer();
+    res.setHeader("Content-Type", "font/woff2");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send(Buffer.from(buf));
+  } catch {
+    res.status(502).json({ error: "upstream error" });
+  }
+});
+
 export default router;
