@@ -76,7 +76,7 @@ export default function Home() {
         onSettingsClick={() => setSettingsOpen(true)}
       />
 
-      <main className="px-4 pt-6 pb-24 flex flex-col gap-7 max-w-lg mx-auto">
+      <main className="px-4 pt-6 pb-28 flex flex-col gap-6 w-full max-w-md mx-auto">
 
         {/* Hero */}
         <div>

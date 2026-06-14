@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { Menu, Search, Settings, Pencil, Check } from "lucide-react";
-import { SiRoblox } from "react-icons/si";
 import RobuxIcon from "@/components/RobuxIcon";
 import RobloxAvatar from "@/components/RobloxAvatar";
 
@@ -52,9 +51,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           <button data-testid="button-hamburger" className="text-foreground/80 hover:text-foreground transition-colors">
             <Menu className="h-5 w-5" />
           </button>
-          <div className="bg-white rounded-[6px] p-[3px] flex items-center justify-center">
-            <SiRoblox className="text-black h-5 w-5" />
-          </div>
+          <img src="/roblox-icon.jpg" alt="Roblox" className="h-7 w-7 rounded-lg object-cover" />
         </div>
 
         {/* Right: icons row */}
