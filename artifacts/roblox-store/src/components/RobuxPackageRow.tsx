@@ -1,30 +1,35 @@
-import { motion } from "framer-motion";
+import RobuxIcon from "@/components/RobuxIcon";
 
 interface RobuxPackageRowProps {
   amount: string;
   original: string;
   price: string;
+  isLast?: boolean;
 }
 
-export default function RobuxPackageRow({ amount, original, price }: RobuxPackageRowProps) {
+export default function RobuxPackageRow({ amount, original, price, isLast }: RobuxPackageRowProps) {
   return (
-    <motion.div 
-      whileHover={{ scale: 1.01, backgroundColor: "hsl(var(--secondary) / 0.5)" }}
-      className="flex items-center justify-between p-4 border-b border-border last:border-0 cursor-pointer transition-colors"
+    <div
+      data-testid={`row-package-${amount.replace(/,/g, '')}`}
+      className={`flex items-center justify-between px-4 py-4 hover:bg-white/4 transition-colors cursor-pointer ${!isLast ? 'border-b border-white/6' : ''}`}
     >
-      <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <div className="h-5 w-5 rounded-full bg-accent flex items-center justify-center shadow-[0_0_10px_rgba(255,215,0,0.3)]">
-            <span className="text-accent-foreground font-bold text-[10px]">R</span>
-          </div>
-          <span className="font-bold text-xl">{amount}</span>
+          <RobuxIcon className="w-5 h-5 text-amber-400" />
+          <span className="font-bold text-lg text-white">{amount}</span>
         </div>
-        <span className="text-xs text-muted-foreground line-through ml-7">{original}</span>
+        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+          <RobuxIcon className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="line-through">{original}</span>
+        </div>
       </div>
-      
-      <button className="bg-secondary hover:bg-secondary/80 text-foreground px-5 py-2 rounded-full text-sm font-bold transition-all">
+
+      <button
+        data-testid={`button-package-${amount.replace(/,/g, '')}`}
+        className="bg-white/8 hover:bg-white/15 text-white font-semibold text-sm px-5 py-2 rounded-xl transition-colors border border-white/8"
+      >
         {price}
       </button>
-    </motion.div>
+    </div>
   );
 }

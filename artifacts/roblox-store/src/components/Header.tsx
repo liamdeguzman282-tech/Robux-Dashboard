@@ -1,42 +1,156 @@
-import { Menu, Search, Bell, Settings } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu, Search, Bell, Settings, Pencil, Check } from "lucide-react";
 import { SiRoblox } from "react-icons/si";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import RobuxIcon from "@/components/RobuxIcon";
 
-export default function Header() {
+interface HeaderProps {
+  username: string;
+  robuxBalance: number;
+  onUsernameChange: (name: string) => void;
+  onBalanceChange: (bal: number) => void;
+  onSendClick: () => void;
+}
+
+export default function Header({ username, robuxBalance, onUsernameChange, onBalanceChange, onSendClick }: HeaderProps) {
+  const [editingBalance, setEditingBalance] = useState(false);
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [balanceInput, setBalanceInput] = useState(String(robuxBalance));
+  const [usernameInput, setUsernameInput] = useState(username);
+  const balanceRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingBalance) balanceRef.current?.focus();
+  }, [editingBalance]);
+
+  useEffect(() => {
+    if (editingUsername) usernameRef.current?.focus();
+  }, [editingUsername]);
+
+  function commitBalance() {
+    const num = parseInt(balanceInput.replace(/,/g, ""), 10);
+    if (!isNaN(num) && num >= 0) onBalanceChange(num);
+    else setBalanceInput(robuxBalance.toLocaleString());
+    setEditingBalance(false);
+  }
+
+  function commitUsername() {
+    const val = usernameInput.trim();
+    if (val.length > 0) onUsernameChange(val);
+    else setUsernameInput(username);
+    setEditingUsername(false);
+  }
+
+  const initials = username.slice(0, 2).toUpperCase();
+  const avatarColors = ["from-violet-500 to-indigo-600", "from-rose-500 to-orange-500", "from-emerald-500 to-teal-600", "from-sky-500 to-blue-600"];
+  const colorIndex = username.charCodeAt(0) % avatarColors.length;
+
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-background/80 border-b border-border h-16 flex items-center px-4 justify-between">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" className="text-foreground">
-          <Menu className="h-6 w-6" />
-        </Button>
-        <div className="bg-white p-1 rounded-md flex items-center justify-center">
-          <SiRoblox className="text-black h-6 w-6" />
+    <header className="sticky top-0 z-40 w-full bg-[#13151a]/95 backdrop-blur-xl border-b border-white/8">
+      {/* Main header row */}
+      <div className="flex items-center justify-between px-4 h-[52px]">
+        {/* Left: hamburger + logo */}
+        <div className="flex items-center gap-3">
+          <button data-testid="button-hamburger" className="text-foreground/80 hover:text-foreground transition-colors">
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="bg-white rounded-[6px] p-[3px] flex items-center justify-center">
+            <SiRoblox className="text-black h-5 w-5" />
+          </div>
+        </div>
+
+        {/* Right: icons row */}
+        <div className="flex items-center gap-1.5">
+          {/* Avatar with editable username popup */}
+          <div className="relative group">
+            <button
+              data-testid="button-avatar"
+              onClick={() => { setEditingUsername(true); setUsernameInput(username); }}
+              className="relative"
+            >
+              <div className={`w-[34px] h-[34px] rounded-full bg-gradient-to-br ${avatarColors[colorIndex]} flex items-center justify-center text-white font-bold text-xs ring-2 ring-white/20`}>
+                {initials}
+              </div>
+            </button>
+
+            {editingUsername && (
+              <div className="absolute right-0 top-[42px] bg-[#1e2130] border border-white/10 rounded-2xl p-3 shadow-2xl flex items-center gap-2 z-50 min-w-[200px]">
+                <input
+                  ref={usernameRef}
+                  data-testid="input-username"
+                  value={usernameInput}
+                  onChange={e => setUsernameInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') commitUsername(); if (e.key === 'Escape') setEditingUsername(false); }}
+                  placeholder="Enter username"
+                  className="flex-1 bg-white/8 text-white text-sm font-semibold rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary"
+                />
+                <button onClick={commitUsername} className="text-primary hover:text-primary/80">
+                  <Check className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button data-testid="button-search" className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
+            <Search className="h-5 w-5" />
+          </button>
+
+          {/* Notification with red dot */}
+          <button data-testid="button-notifications" className="relative text-foreground/70 hover:text-foreground transition-colors p-1.5">
+            <div className="w-8 h-8 rounded-full border-2 border-foreground/20 flex items-center justify-center">
+              <RobuxIcon className="w-4 h-4 text-foreground/70" />
+            </div>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full ring-1 ring-background" />
+          </button>
+
+          {/* Robux balance — click to edit */}
+          <button
+            data-testid="button-robux-balance"
+            onClick={() => { setEditingBalance(true); setBalanceInput(String(robuxBalance)); }}
+            className="flex items-center gap-1.5 bg-white/6 hover:bg-white/10 rounded-full px-3 py-1.5 transition-colors group"
+          >
+            <RobuxIcon className="w-4 h-4 text-amber-400" />
+            {editingBalance ? (
+              <input
+                ref={balanceRef}
+                data-testid="input-robux-balance"
+                value={balanceInput}
+                onChange={e => setBalanceInput(e.target.value)}
+                onBlur={commitBalance}
+                onKeyDown={e => { if (e.key === 'Enter') commitBalance(); if (e.key === 'Escape') setEditingBalance(false); }}
+                className="w-20 bg-transparent text-white font-bold text-sm outline-none"
+                onClick={e => e.stopPropagation()}
+              />
+            ) : (
+              <span className="font-bold text-sm text-white">{robuxBalance.toLocaleString()}</span>
+            )}
+            <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
+
+          <button data-testid="button-settings" className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
+            <Settings className="h-5 w-5" />
+          </button>
         </div>
       </div>
-      
-      <div className="flex items-center gap-3">
-        <Avatar className="h-8 w-8 ring-2 ring-border cursor-pointer">
-          <AvatarImage src="" />
-          <AvatarFallback className="bg-gradient-to-tr from-purple-500 to-primary text-xs font-bold">RX</AvatarFallback>
-        </Avatar>
-        <Button variant="ghost" size="icon" className="text-foreground">
-          <Search className="h-5 w-5" />
-        </Button>
-        <Button variant="ghost" size="icon" className="text-foreground">
-          <Bell className="h-5 w-5" />
-        </Button>
-        
-        <div className="flex items-center gap-2 bg-secondary/50 rounded-full px-3 py-1 cursor-pointer hover:bg-secondary transition-colors">
-          <div className="h-5 w-5 rounded-full bg-accent flex items-center justify-center animate-pulse">
-            <span className="text-accent-foreground font-bold text-[10px]">R</span>
-          </div>
-          <span className="font-bold text-sm">14,231</span>
+
+      {/* Sub-nav row */}
+      <div className="flex items-center justify-between px-4 py-2 border-t border-white/5">
+        <div className="flex items-center gap-5 text-sm font-semibold text-foreground/60">
+          <button className="hover:text-foreground transition-colors">Charts</button>
+          <button className="hover:text-foreground transition-colors">Marketplace</button>
+          <button className="hover:text-foreground transition-colors">Create</button>
+          <button className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+            <RobuxIcon className="w-4 h-4 text-foreground/60" />
+            <span className="text-amber-400 font-bold">{robuxBalance.toLocaleString()}</span>
+          </button>
         </div>
-        
-        <Button variant="ghost" size="icon" className="text-foreground">
-          <Settings className="h-5 w-5" />
-        </Button>
+        <button
+          data-testid="button-send"
+          onClick={onSendClick}
+          className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 text-white text-sm font-bold px-4 py-1.5 rounded-full transition-colors border border-white/15"
+        >
+          <span className="text-base leading-none">↑</span> Send
+        </button>
       </div>
     </header>
   );

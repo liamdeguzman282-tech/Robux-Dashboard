@@ -1,105 +1,132 @@
 import { useState } from "react";
-import { Crown, Sparkles } from "lucide-react";
 import Header from "@/components/Header";
 import AvatarItemCard from "@/components/AvatarItemCard";
 import RobuxPackageRow from "@/components/RobuxPackageRow";
 import SendModal from "@/components/SendModal";
 
+const CrownIcon = () => (
+  <svg viewBox="0 0 80 80" className="w-14 h-14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 55 L18 25 L35 42 L40 18 L45 42 L62 25 L70 55 Z" fill="url(#crownGrad)" stroke="#c0a020" strokeWidth="1.5" strokeLinejoin="round"/>
+    <rect x="10" y="55" width="60" height="8" rx="2" fill="url(#crownGrad2)" stroke="#c0a020" strokeWidth="1"/>
+    <circle cx="40" cy="18" r="4" fill="#ffd700"/>
+    <circle cx="18" cy="25" r="3.5" fill="#ffd700"/>
+    <circle cx="62" cy="25" r="3.5" fill="#ffd700"/>
+    <defs>
+      <linearGradient id="crownGrad" x1="10" y1="18" x2="70" y2="63" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#ffe066"/>
+        <stop offset="100%" stopColor="#c87820"/>
+      </linearGradient>
+      <linearGradient id="crownGrad2" x1="10" y1="55" x2="70" y2="63" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#d4a010"/>
+        <stop offset="100%" stopColor="#a06010"/>
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const WingsIcon = () => (
+  <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 50 C30 35 8 28 4 18 C14 22 26 30 40 50Z" fill="url(#wingL)" opacity="0.9"/>
+    <path d="M40 50 C38 32 16 18 8 10 C20 16 32 28 40 50Z" fill="url(#wingL2)" opacity="0.7"/>
+    <path d="M40 50 C50 35 72 28 76 18 C66 22 54 30 40 50Z" fill="url(#wingR)" opacity="0.9"/>
+    <path d="M40 50 C42 32 64 18 72 10 C60 16 48 28 40 50Z" fill="url(#wingR2)" opacity="0.7"/>
+    <defs>
+      <linearGradient id="wingL" x1="4" y1="18" x2="40" y2="50" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#c084fc"/>
+        <stop offset="100%" stopColor="#7c3aed"/>
+      </linearGradient>
+      <linearGradient id="wingL2" x1="8" y1="10" x2="40" y2="50" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#f9a8d4"/>
+        <stop offset="100%" stopColor="#db2777"/>
+      </linearGradient>
+      <linearGradient id="wingR" x1="76" y1="18" x2="40" y2="50" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#fbbf24"/>
+        <stop offset="100%" stopColor="#d97706"/>
+      </linearGradient>
+      <linearGradient id="wingR2" x1="72" y1="10" x2="40" y2="50" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#fb923c"/>
+        <stop offset="100%" stopColor="#ea580c"/>
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [username, setUsername] = useState("MyUser");
+  const [robuxBalance, setRobuxBalance] = useState(14231);
 
   return (
-    <div className="min-h-[100dvh] w-full bg-background relative pb-24">
-      {/* Background SVG Pattern */}
-      <div 
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23ffffff' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-        }}
+    <div className="min-h-[100dvh] w-full bg-background relative wavy-bg">
+      <Header
+        username={username}
+        robuxBalance={robuxBalance}
+        onUsernameChange={setUsername}
+        onBalanceChange={setRobuxBalance}
+        onSendClick={() => setIsModalOpen(true)}
       />
 
-      <Header />
+      <main className="px-4 pt-6 pb-24 flex flex-col gap-7 max-w-lg mx-auto">
 
-      <main className="relative z-10">
-        {/* Sub-nav Row */}
-        <div className="px-4 py-4 flex items-center justify-between border-b border-border/50 bg-background/50 backdrop-blur-sm sticky top-16 z-30">
-          <div className="flex gap-2 overflow-x-auto scrollbar-none pr-4">
-            {['Charts', 'Marketplace', 'Create', 'Robux'].map((item, i) => (
-              <button 
-                key={item} 
-                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${i === 3 ? 'bg-white text-black' : 'text-muted-foreground hover:bg-secondary'}`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="shrink-0 bg-secondary hover:bg-secondary/80 text-white px-5 py-1.5 rounded-full text-sm font-bold shadow-lg flex items-center gap-1 transition-transform hover:scale-105"
-          >
-            <span className="text-lg leading-none mb-1">↑</span> Send
-          </button>
+        {/* Hero */}
+        <div>
+          <h1 className="text-4xl font-black text-white leading-tight tracking-tight">
+            Enjoy up to 25%<br />
+            <span className="text-amber-400">more Robux</span>
+          </h1>
+          <p className="text-base font-medium text-muted-foreground mt-2">
+            with Roblox Premium membership
+          </p>
         </div>
 
-        <div className="p-4 flex flex-col gap-8 max-w-3xl mx-auto w-full">
-          
-          {/* Hero Banner */}
-          <div className="pt-6 pb-2">
-            <h1 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-              Enjoy up to 25% <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-200">
-                more Robux
-              </span>
-            </h1>
-            <p className="text-lg font-medium text-muted-foreground mt-2">
-              with Roblox Premium membership
-            </p>
+        {/* Limited-time items */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-white">Limited-time avatar items</h2>
+            <span className="bg-white/10 text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/10">
+              18 days left
+            </span>
           </div>
+          <div className="flex flex-col gap-3">
+            <AvatarItemCard
+              title="Fractured Domino Crown"
+              value="24,000"
+              original="22,500"
+              price="₱11.49k"
+              imageUrl=""
+              itemIcon={<CrownIcon />}
+            />
+            <AvatarItemCard
+              title="Wings of the Pactbreaker"
+              value="11,000"
+              original="10,000"
+              price="₱5,700.00"
+              imageUrl=""
+              itemIcon={<WingsIcon />}
+            />
+          </div>
+        </section>
 
-          {/* Limited Items */}
-          <section className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">Limited-time avatar items</h2>
-              <div className="bg-card px-3 py-1 rounded-full border border-card-border flex items-center gap-1.5 text-xs font-bold text-white shadow-sm">
-                <span>🕐</span> 18 days left
-              </div>
-            </div>
-            
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none -mx-4 px-4">
-              <AvatarItemCard 
-                title="Fractured Domino Crown"
-                value="24,000"
-                original="22,500"
-                price="₱11.49k"
-                imageFallbackContent={<Crown className="w-24 h-24 text-accent drop-shadow-2xl" />}
-              />
-              <AvatarItemCard 
-                title="Wings of the Pactbreaker"
-                value="11,000"
-                original="10,000"
-                price="₱5,700.00"
-                imageFallbackContent={<Sparkles className="w-24 h-24 text-blue-400 drop-shadow-2xl" />}
-              />
-            </div>
-          </section>
+        {/* Robux packages */}
+        <section>
+          <h2 className="text-lg font-bold text-white mb-3">Robux packages</h2>
+          <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
+            <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" />
+            <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" />
+            <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" />
+            <RobuxPackageRow amount="1,500" original="1,200" price="₱799.00" />
+            <RobuxPackageRow amount="1,000" original="800" price="₱569.00" />
+            <RobuxPackageRow amount="500" original="400" price="₱269.00" isLast />
+          </div>
+        </section>
 
-          {/* Robux Packages */}
-          <section className="flex flex-col gap-4">
-            <h2 className="text-xl font-bold text-white">Robux packages</h2>
-            <div className="bg-card border border-card-border rounded-3xl overflow-hidden shadow-xl">
-              <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" />
-              <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" />
-              <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" />
-              <RobuxPackageRow amount="1,500" original="1,200" price="₱799.00" />
-              <RobuxPackageRow amount="1,000" original="800" price="₱569.00" />
-              <RobuxPackageRow amount="500" original="400" price="₱269.00" />
-            </div>
-          </section>
-
-        </div>
       </main>
 
-      <SendModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SendModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        robuxBalance={robuxBalance}
+      />
     </div>
   );
 }

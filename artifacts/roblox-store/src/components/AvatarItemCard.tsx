@@ -1,49 +1,60 @@
-import { motion } from "framer-motion";
+import RobuxIcon from "@/components/RobuxIcon";
 
 interface AvatarItemCardProps {
   title: string;
   value: string;
   original: string;
   price: string;
-  imageFallbackContent: React.ReactNode;
+  imageUrl: string;
+  itemIcon: React.ReactNode;
 }
 
-export default function AvatarItemCard({ title, value, original, price, imageFallbackContent }: AvatarItemCardProps) {
+export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon }: AvatarItemCardProps) {
   return (
-    <motion.div 
-      whileHover={{ y: -4 }}
-      className="min-w-[240px] max-w-[280px] shrink-0 rounded-2xl bg-card border border-card-border overflow-hidden cursor-pointer"
+    <div
+      data-testid={`card-avatar-item-${title.replace(/\s+/g, '-').toLowerCase()}`}
+      className="w-full rounded-2xl bg-card border border-card-border overflow-hidden"
     >
-      <div className="aspect-square w-full bg-secondary flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-primary/20 mix-blend-overlay" />
-        {imageFallbackContent}
-      </div>
-      
-      <div className="p-4 flex flex-col gap-3">
-        <div>
-          <h3 className="font-bold text-base line-clamp-1">{title}</h3>
-          <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground font-medium">
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-blue-500 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            Roblox
+      {/* Top section: image + info */}
+      <div className="flex items-center gap-4 p-4">
+        <div className="w-20 h-20 rounded-xl bg-[#1e2234] flex items-center justify-center shrink-0 overflow-hidden border border-white/8">
+          {imageUrl ? (
+            <img src={imageUrl} alt={title} className="w-full h-full object-cover" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+          ) : null}
+          <div className="flex items-center justify-center w-full h-full">
+            {itemIcon}
           </div>
         </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <div className="h-4 w-4 rounded-full bg-accent flex items-center justify-center">
-                <span className="text-accent-foreground font-bold text-[8px]">R</span>
-              </div>
-              <span className="font-bold text-lg">{value}</span>
-            </div>
-            <span className="text-xs text-muted-foreground line-through decoration-muted-foreground/50">{original}</span>
+        <div className="flex flex-col gap-1 min-w-0">
+          <h3 className="font-bold text-base text-white leading-tight">{title}</h3>
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-blue-500 shrink-0" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>Roblox</span>
           </div>
-          
-          <button className="bg-secondary hover:bg-secondary/80 text-foreground px-4 py-1.5 rounded-full text-sm font-bold transition-all">
-            {price}
-          </button>
         </div>
       </div>
-    </motion.div>
+
+      {/* Bottom section: price */}
+      <div className="flex items-center justify-between px-4 py-3 bg-white/4 border-t border-white/6">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <RobuxIcon className="w-4 h-4 text-amber-400" />
+            <span className="font-bold text-base text-white">{value}</span>
+          </div>
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            <RobuxIcon className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="line-through">{original}</span>
+          </div>
+        </div>
+        <button
+          data-testid={`button-buy-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          className="bg-white/10 hover:bg-white/18 text-white font-bold text-sm px-5 py-2 rounded-xl transition-colors border border-white/10"
+        >
+          {price}
+        </button>
+      </div>
+    </div>
   );
 }
