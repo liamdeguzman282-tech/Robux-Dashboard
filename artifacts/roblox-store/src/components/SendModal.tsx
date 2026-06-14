@@ -9,12 +9,13 @@ interface SendModalProps {
   onClose: () => void;
   robuxBalance: number;
   sentHistory: string[];
-  onSent: (username: string) => void;
+  onSent: (username: string, amount: number) => void;
 }
 
 const SUGGESTED_USERS = ["Roblox", "builderman", "alexnewtron", "Stickmasterluke", "Merely"];
 
 export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, onSent }: SendModalProps) {
+
   const [stage, setStage] = useState<"search" | "amount" | "confirm" | "success">("search");
   const [searchQuery, setSearchQuery] = useState("");
   const [foundUsername, setFoundUsername] = useState<string | null>(null);
@@ -78,7 +79,7 @@ export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, 
     setTimeout(() => {
       setIsLoading(false);
       setStage("success");
-      if (foundUsername) onSent(foundUsername);
+      if (foundUsername) onSent(foundUsername, amount);
     }, 1500);
   }
 

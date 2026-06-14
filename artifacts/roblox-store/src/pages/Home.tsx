@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import AvatarItemCard from "@/components/AvatarItemCard";
 import RobuxPackageRow from "@/components/RobuxPackageRow";
 import SendModal from "@/components/SendModal";
+import SettingsDrawer, { type Transaction } from "@/components/SettingsDrawer";
 
 const CrownIcon = () => (
   <svg viewBox="0 0 80 80" className="w-14 h-14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,13 +56,13 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [username, setUsername] = useState("MyUser");
   const [robuxBalance, setRobuxBalance] = useState(14231);
-  const [sentHistory, setSentHistory] = useState<string[]>([]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  function handleSent(toUsername: string) {
-    setSentHistory(prev => {
-      const filtered = prev.filter(u => u.toLowerCase() !== toUsername.toLowerCase());
-      return [toUsername, ...filtered].slice(0, 10);
-    });
+  const sentHistory = [...new Map(transactions.map(t => [t.username.toLowerCase(), t.username])).values()];
+
+  function handleSent(toUsername: string, amount: number) {
+    setTransactions(prev => [{ username: toUsername, amount, timestamp: new Date() }, ...prev]);
   }
 
   return (
@@ -72,6 +73,7 @@ export default function Home() {
         onUsernameChange={setUsername}
         onBalanceChange={setRobuxBalance}
         onSendClick={() => setIsModalOpen(true)}
+        onSettingsClick={() => setSettingsOpen(true)}
       />
 
       <main className="px-4 pt-6 pb-24 flex flex-col gap-7 max-w-lg mx-auto">
@@ -136,6 +138,15 @@ export default function Home() {
         robuxBalance={robuxBalance}
         sentHistory={sentHistory}
         onSent={handleSent}
+      />
+
+      <SettingsDrawer
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        username={username}
+        robuxBalance={robuxBalance}
+        onBalanceChange={setRobuxBalance}
+        transactions={transactions}
       />
     </div>
   );

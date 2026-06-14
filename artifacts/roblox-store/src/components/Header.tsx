@@ -10,9 +10,10 @@ interface HeaderProps {
   onUsernameChange: (name: string) => void;
   onBalanceChange: (bal: number) => void;
   onSendClick: () => void;
+  onSettingsClick: () => void;
 }
 
-export default function Header({ username, robuxBalance, onUsernameChange, onBalanceChange, onSendClick }: HeaderProps) {
+export default function Header({ username, robuxBalance, onUsernameChange, onBalanceChange, onSendClick, onSettingsClick }: HeaderProps) {
   const [editingBalance, setEditingBalance] = useState(false);
   const [editingUsername, setEditingUsername] = useState(false);
   const [balanceInput, setBalanceInput] = useState(String(robuxBalance));
@@ -122,7 +123,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
 
-          <button data-testid="button-settings" className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
+          <button data-testid="button-settings" onClick={onSettingsClick} className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Settings className="h-5 w-5" />
           </button>
         </div>
