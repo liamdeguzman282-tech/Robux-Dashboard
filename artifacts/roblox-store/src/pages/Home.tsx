@@ -55,6 +55,14 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [username, setUsername] = useState("MyUser");
   const [robuxBalance, setRobuxBalance] = useState(14231);
+  const [sentHistory, setSentHistory] = useState<string[]>([]);
+
+  function handleSent(toUsername: string) {
+    setSentHistory(prev => {
+      const filtered = prev.filter(u => u.toLowerCase() !== toUsername.toLowerCase());
+      return [toUsername, ...filtered].slice(0, 10);
+    });
+  }
 
   return (
     <div className="min-h-[100dvh] w-full bg-background relative wavy-bg">
@@ -126,6 +134,8 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         robuxBalance={robuxBalance}
+        sentHistory={sentHistory}
+        onSent={handleSent}
       />
     </div>
   );

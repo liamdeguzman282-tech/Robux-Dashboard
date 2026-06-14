@@ -8,11 +8,13 @@ interface SendModalProps {
   isOpen: boolean;
   onClose: () => void;
   robuxBalance: number;
+  sentHistory: string[];
+  onSent: (username: string) => void;
 }
 
 const SUGGESTED_USERS = ["Roblox", "builderman", "alexnewtron", "Stickmasterluke", "Merely"];
 
-export default function SendModal({ isOpen, onClose, robuxBalance }: SendModalProps) {
+export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, onSent }: SendModalProps) {
   const [stage, setStage] = useState<"search" | "amount" | "confirm" | "success">("search");
   const [searchQuery, setSearchQuery] = useState("");
   const [foundUsername, setFoundUsername] = useState<string | null>(null);
@@ -73,7 +75,11 @@ export default function SendModal({ isOpen, onClose, robuxBalance }: SendModalPr
 
   function handleSend() {
     setIsLoading(true);
-    setTimeout(() => { setIsLoading(false); setStage("success"); }, 1500);
+    setTimeout(() => {
+      setIsLoading(false);
+      setStage("success");
+      if (foundUsername) onSent(foundUsername);
+    }, 1500);
   }
 
   return (
@@ -129,6 +135,30 @@ export default function SendModal({ isOpen, onClose, robuxBalance }: SendModalPr
 
                 {notFound && (
                   <p className="text-red-400 text-sm text-center">User not found on Roblox.</p>
+                )}
+
+                {/* Recently sent history */}
+                {sentHistory.length > 0 && (
+                  <div>
+                    <p className="text-muted-foreground text-xs font-semibold mb-3 uppercase tracking-wide">Recently Sent</p>
+                    <div className="flex flex-col gap-1">
+                      {sentHistory.map(u => (
+                        <button
+                          key={u}
+                          data-testid={`button-history-${u.toLowerCase()}`}
+                          onClick={() => { setSearchQuery(u); handleSearch(u); }}
+                          className="flex items-center gap-3 w-full bg-white/6 hover:bg-white/12 text-white text-sm font-medium px-3 py-2.5 rounded-xl transition-colors border border-white/8 text-left"
+                        >
+                          <RobloxAvatar username={u} size="w-9 h-9" ringClass="ring-1 ring-white/20" />
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-white text-sm">{u}</span>
+                            <span className="text-muted-foreground text-xs">@{u.toLowerCase()}</span>
+                          </div>
+                          <span className="ml-auto text-muted-foreground text-xs">Tap to send</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
 
                 <div>
