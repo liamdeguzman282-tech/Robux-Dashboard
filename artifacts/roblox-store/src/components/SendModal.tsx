@@ -290,15 +290,6 @@ export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, 
                 >
                   <Check className="w-10 h-10 text-emerald-400" />
                 </motion.div>
-                <div className="space-y-1.5 text-center">
-                  <h2 className="font-black text-white text-2xl">Robux sent!</h2>
-                  <p className="text-muted-foreground text-base">
-                    You sent{" "}
-                    <span className="font-bold text-amber-400">{amount.toLocaleString()} Robux</span>{" "}
-                    to{" "}
-                    <span className="font-bold text-white">{foundUsername}</span>
-                  </p>
-                </div>
                 <button
                   data-testid="button-done"
                   onClick={onClose}
