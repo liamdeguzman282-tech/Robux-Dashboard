@@ -22,13 +22,8 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
   const balanceRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (editingBalance) balanceRef.current?.focus();
-  }, [editingBalance]);
-
-  useEffect(() => {
-    if (editingUsername) usernameRef.current?.focus();
-  }, [editingUsername]);
+  useEffect(() => { if (editingBalance) balanceRef.current?.focus(); }, [editingBalance]);
+  useEffect(() => { if (editingUsername) usernameRef.current?.focus(); }, [editingUsername]);
 
   function commitBalance() {
     const num = parseInt(balanceInput.replace(/,/g, ""), 10);
@@ -45,12 +40,14 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-xl border-b border-border">
-      {/* Main header row */}
+    <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-xl border-b-2 border-border">
+
+      {/* ── Row 1: Logo + right controls ── */}
       <div className="flex items-center justify-between px-4 h-[52px]">
+
         {/* Left: hamburger + logo */}
         <div className="flex items-center gap-3">
-          <button data-testid="button-hamburger" className="text-foreground/80 hover:text-foreground transition-colors">
+          <button data-testid="button-hamburger" className="text-foreground/70 hover:text-foreground transition-colors">
             <Menu className="h-5 w-5" />
           </button>
           <img
@@ -60,18 +57,18 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           />
         </div>
 
-        {/* Right: icons row */}
+        {/* Right controls */}
         <div className="flex items-center gap-1.5">
-          {/* Avatar — click to edit username */}
+
+          {/* Avatar (always visible) */}
           <div className="relative">
             <button
               data-testid="button-avatar"
               onClick={() => { setEditingUsername(true); setUsernameInput(username); }}
               title={`@${username} — click to change`}
             >
-              <RobloxAvatar username={username} size="w-[34px] h-[34px]" ringClass="ring-2 ring-border" />
+              <RobloxAvatar username={username} size="w-[32px] h-[32px]" ringClass="ring-2 ring-border" />
             </button>
-
             {editingUsername && (
               <div className="absolute right-0 top-[42px] bg-card border border-border rounded-2xl p-3 shadow-2xl flex items-center gap-2 z-50 min-w-[210px]">
                 <input
@@ -90,19 +87,12 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             )}
           </div>
 
-          <button data-testid="button-search" className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
+          {/* Search — desktop only */}
+          <button data-testid="button-search" className="hidden lg:flex text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Search className="h-5 w-5" />
           </button>
 
-          {/* Robux shield icon with notification dot */}
-          <button data-testid="button-notifications" className="relative text-foreground/70 hover:text-foreground transition-colors p-1.5">
-            <div className="w-8 h-8 rounded-full border-2 border-border flex items-center justify-center">
-              <RobuxIcon className="w-4 h-4" />
-            </div>
-            <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-1 ring-background" />
-          </button>
-
-          {/* Robux balance — click to edit */}
+          {/* Robux balance (always visible) */}
           <button
             data-testid="button-robux-balance"
             onClick={() => { setEditingBalance(true); setBalanceInput(String(robuxBalance)); }}
@@ -117,7 +107,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
                 onChange={e => setBalanceInput(e.target.value)}
                 onBlur={commitBalance}
                 onKeyDown={e => { if (e.key === "Enter") commitBalance(); if (e.key === "Escape") setEditingBalance(false); }}
-                className="w-20 bg-transparent text-foreground font-bold text-sm outline-none"
+                className="w-16 bg-transparent text-foreground font-bold text-sm outline-none"
                 onClick={e => e.stopPropagation()}
               />
             ) : (
@@ -126,41 +116,60 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
 
-          {/* Theme toggle */}
+          {/* Theme toggle — desktop only */}
           <button
             data-testid="button-theme-toggle"
             onClick={toggle}
-            className="text-foreground/70 hover:text-foreground transition-colors p-1.5"
+            className="hidden lg:flex text-foreground/70 hover:text-foreground transition-colors p-1.5"
             title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
+          {/* Settings (always visible) */}
           <button data-testid="button-settings" onClick={onSettingsClick} className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Settings className="h-5 w-5" />
           </button>
         </div>
       </div>
 
-      {/* Sub-nav row */}
-      <div className="flex items-center justify-between px-4 py-2 border-t border-border">
-        <div className="flex items-center gap-5 text-sm font-semibold text-foreground/60">
+      {/* ── Row 2: Nav + Send (desktop only) ── */}
+      <div className="hidden lg:flex items-center justify-between px-6 py-3 border-t-2 border-border bg-secondary/20">
+        <nav className="flex items-center gap-7 text-sm font-semibold text-foreground/60">
           <button className="hover:text-foreground transition-colors">Charts</button>
           <button className="hover:text-foreground transition-colors">Marketplace</button>
           <button className="hover:text-foreground transition-colors">Create</button>
+          <span className="w-px h-4 bg-border" />
           <button className="flex items-center gap-1.5 hover:text-foreground transition-colors">
             <RobuxIcon className="w-4 h-4" />
             <span className="text-amber-500 font-bold">{robuxBalance.toLocaleString()}</span>
           </button>
-        </div>
+        </nav>
         <button
           data-testid="button-send"
           onClick={onSendClick}
-          className="flex items-center gap-1.5 bg-secondary hover:bg-secondary/70 text-foreground text-sm font-bold px-4 py-1.5 rounded-full transition-colors border border-border"
+          className="flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold px-5 py-2 rounded-full transition-colors"
         >
-          <span className="text-base leading-none">↑</span> Send
+          <span className="text-base leading-none">↑</span> Send Robux
         </button>
       </div>
+
+      {/* ── Row 2 mobile: slim Send bar ── */}
+      <div className="flex lg:hidden items-center justify-between px-4 py-2 border-t border-border">
+        <nav className="flex items-center gap-4 text-xs font-semibold text-foreground/50">
+          <button className="hover:text-foreground transition-colors">Charts</button>
+          <button className="hover:text-foreground transition-colors">Marketplace</button>
+          <button className="hover:text-foreground transition-colors">Create</button>
+        </nav>
+        <button
+          data-testid="button-send"
+          onClick={onSendClick}
+          className="flex items-center gap-1 bg-primary hover:bg-primary/90 text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+        >
+          ↑ Send
+        </button>
+      </div>
+
     </header>
   );
 }
