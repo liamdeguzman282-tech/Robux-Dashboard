@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import Header from "@/components/Header";
 import AvatarItemCard from "@/components/AvatarItemCard";
 import RobuxPackageRow from "@/components/RobuxPackageRow";
+import RobuxIcon from "@/components/RobuxIcon";
 import SendModal from "@/components/SendModal";
 import SettingsDrawer, { type Transaction } from "@/components/SettingsDrawer";
 
@@ -90,6 +92,20 @@ export default function Home() {
             <p className="text-base font-medium text-muted-foreground mt-2">
               with Roblox Premium membership
             </p>
+            <div className="flex items-center gap-2 mt-4 flex-wrap">
+              <span className="text-muted-foreground text-xs font-semibold uppercase tracking-wide mr-1">Quick top-up</span>
+              {[1000, 5000, 10000].map(amt => (
+                <button
+                  key={amt}
+                  onClick={() => setRobuxBalance(prev => prev + amt)}
+                  className="flex items-center gap-1.5 bg-secondary hover:bg-secondary/70 border border-border text-foreground text-sm font-bold px-3 py-2 rounded-xl transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                  <RobuxIcon className="w-3.5 h-3.5" />
+                  {amt.toLocaleString()}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Limited-time items */}
