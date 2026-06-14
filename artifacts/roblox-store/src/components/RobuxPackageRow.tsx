@@ -5,12 +5,14 @@ interface RobuxPackageRowProps {
   original: string;
   price: string;
   isLast?: boolean;
+  onBuy: () => void;
 }
 
-export default function RobuxPackageRow({ amount, original, price, isLast }: RobuxPackageRowProps) {
+export default function RobuxPackageRow({ amount, original, price, isLast, onBuy }: RobuxPackageRowProps) {
   return (
     <div
       data-testid={`row-package-${amount.replace(/,/g, '')}`}
+      onClick={onBuy}
       className={`flex items-center justify-between px-4 py-4 hover:bg-secondary/50 transition-colors cursor-pointer ${!isLast ? 'border-b border-border' : ''}`}
     >
       <div className="flex items-center gap-3">

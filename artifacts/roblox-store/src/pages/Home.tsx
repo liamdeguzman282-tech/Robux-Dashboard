@@ -5,6 +5,7 @@ import AvatarItemCard from "@/components/AvatarItemCard";
 import RobuxPackageRow from "@/components/RobuxPackageRow";
 import RobuxIcon from "@/components/RobuxIcon";
 import SendModal from "@/components/SendModal";
+import BuyModal, { type Package } from "@/components/BuyModal";
 import SettingsDrawer, { type Transaction } from "@/components/SettingsDrawer";
 
 const CrownIcon = () => (
@@ -60,6 +61,7 @@ export default function Home() {
   const [robuxBalance, setRobuxBalance] = useState(14231);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [buyPkg, setBuyPkg] = useState<Package | null>(null);
 
   const sentHistory = [...new Map(transactions.map(t => [t.username.toLowerCase(), t.username])).values()];
 
@@ -142,20 +144,26 @@ export default function Home() {
           <section>
             <h2 className="text-lg font-bold text-foreground mb-3">Robux packages</h2>
             <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
-              <RobuxPackageRow amount="22,500" original="18,000" price="₱11,490.00" />
-              <RobuxPackageRow amount="12,500" original="10,000" price="₱6,490.00" />
-              <RobuxPackageRow amount="6,500" original="5,200" price="₱3,290.00" />
-              <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" />
-              <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" />
-              <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" />
-              <RobuxPackageRow amount="1,500" original="1,200" price="₱799.00" />
-              <RobuxPackageRow amount="1,000" original="800" price="₱569.00" />
-              <RobuxPackageRow amount="500" original="400" price="₱269.00" isLast />
+              <RobuxPackageRow amount="22,500" original="18,000" price="₱11,490.00" onBuy={() => setBuyPkg({ amount: "22,500", original: "18,000", price: "₱11,490.00" })} />
+              <RobuxPackageRow amount="12,500" original="10,000" price="₱6,490.00" onBuy={() => setBuyPkg({ amount: "12,500", original: "10,000", price: "₱6,490.00" })} />
+              <RobuxPackageRow amount="6,500" original="5,200" price="₱3,290.00" onBuy={() => setBuyPkg({ amount: "6,500", original: "5,200", price: "₱3,290.00" })} />
+              <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" onBuy={() => setBuyPkg({ amount: "5,250", original: "4,500", price: "₱2,890.00" })} />
+              <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" onBuy={() => setBuyPkg({ amount: "3,625", original: "3,150", price: "₱1,990.00" })} />
+              <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" onBuy={() => setBuyPkg({ amount: "2,000", original: "1,700", price: "₱1,150.00" })} />
+              <RobuxPackageRow amount="1,500" original="1,200" price="₱799.00" onBuy={() => setBuyPkg({ amount: "1,500", original: "1,200", price: "₱799.00" })} />
+              <RobuxPackageRow amount="1,000" original="800" price="₱569.00" onBuy={() => setBuyPkg({ amount: "1,000", original: "800", price: "₱569.00" })} />
+              <RobuxPackageRow amount="500" original="400" price="₱269.00" isLast onBuy={() => setBuyPkg({ amount: "500", original: "400", price: "₱269.00" })} />
             </div>
           </section>
         </div>
 
       </main>
+
+      <BuyModal
+        pkg={buyPkg}
+        onClose={() => setBuyPkg(null)}
+        onConfirm={(robux) => setRobuxBalance(prev => prev + robux)}
+      />
 
       <SendModal
         isOpen={isModalOpen}
