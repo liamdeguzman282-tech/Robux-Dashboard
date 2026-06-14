@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Menu, Search, Bell, Settings, Pencil, Check } from "lucide-react";
+import { Menu, Search, Settings, Pencil, Check } from "lucide-react";
 import { SiRoblox } from "react-icons/si";
 import RobuxIcon from "@/components/RobuxIcon";
+import RobloxAvatar from "@/components/RobloxAvatar";
 
 interface HeaderProps {
   username: string;
@@ -41,10 +42,6 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
     setEditingUsername(false);
   }
 
-  const initials = username.slice(0, 2).toUpperCase();
-  const avatarColors = ["from-violet-500 to-indigo-600", "from-rose-500 to-orange-500", "from-emerald-500 to-teal-600", "from-sky-500 to-blue-600"];
-  const colorIndex = username.charCodeAt(0) % avatarColors.length;
-
   return (
     <header className="sticky top-0 z-40 w-full bg-[#13151a]/95 backdrop-blur-xl border-b border-white/8">
       {/* Main header row */}
@@ -61,27 +58,25 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
 
         {/* Right: icons row */}
         <div className="flex items-center gap-1.5">
-          {/* Avatar with editable username popup */}
-          <div className="relative group">
+          {/* Avatar — click to edit username */}
+          <div className="relative">
             <button
               data-testid="button-avatar"
               onClick={() => { setEditingUsername(true); setUsernameInput(username); }}
-              className="relative"
+              title={`@${username} — click to change`}
             >
-              <div className={`w-[34px] h-[34px] rounded-full bg-gradient-to-br ${avatarColors[colorIndex]} flex items-center justify-center text-white font-bold text-xs ring-2 ring-white/20`}>
-                {initials}
-              </div>
+              <RobloxAvatar username={username} size="w-[34px] h-[34px]" ringClass="ring-2 ring-white/25" />
             </button>
 
             {editingUsername && (
-              <div className="absolute right-0 top-[42px] bg-[#1e2130] border border-white/10 rounded-2xl p-3 shadow-2xl flex items-center gap-2 z-50 min-w-[200px]">
+              <div className="absolute right-0 top-[42px] bg-[#1e2130] border border-white/10 rounded-2xl p-3 shadow-2xl flex items-center gap-2 z-50 min-w-[210px]">
                 <input
                   ref={usernameRef}
                   data-testid="input-username"
                   value={usernameInput}
                   onChange={e => setUsernameInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') commitUsername(); if (e.key === 'Escape') setEditingUsername(false); }}
-                  placeholder="Enter username"
+                  onKeyDown={e => { if (e.key === "Enter") commitUsername(); if (e.key === "Escape") setEditingUsername(false); }}
+                  placeholder="Roblox username"
                   className="flex-1 bg-white/8 text-white text-sm font-semibold rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary"
                 />
                 <button onClick={commitUsername} className="text-primary hover:text-primary/80">
@@ -95,12 +90,12 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             <Search className="h-5 w-5" />
           </button>
 
-          {/* Notification with red dot */}
+          {/* Robux shield icon with notification dot */}
           <button data-testid="button-notifications" className="relative text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <div className="w-8 h-8 rounded-full border-2 border-foreground/20 flex items-center justify-center">
               <RobuxIcon className="w-4 h-4 text-foreground/70" />
             </div>
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full ring-1 ring-background" />
+            <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-1 ring-[#13151a]" />
           </button>
 
           {/* Robux balance — click to edit */}
@@ -117,7 +112,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
                 value={balanceInput}
                 onChange={e => setBalanceInput(e.target.value)}
                 onBlur={commitBalance}
-                onKeyDown={e => { if (e.key === 'Enter') commitBalance(); if (e.key === 'Escape') setEditingBalance(false); }}
+                onKeyDown={e => { if (e.key === "Enter") commitBalance(); if (e.key === "Escape") setEditingBalance(false); }}
                 className="w-20 bg-transparent text-white font-bold text-sm outline-none"
                 onClick={e => e.stopPropagation()}
               />
