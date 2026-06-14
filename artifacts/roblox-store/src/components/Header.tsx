@@ -116,11 +116,11 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
 
-          {/* Theme toggle — desktop only */}
+          {/* Theme toggle */}
           <button
             data-testid="button-theme-toggle"
             onClick={toggle}
-            className="hidden lg:flex text-foreground/70 hover:text-foreground transition-colors p-1.5"
+            className="text-foreground/70 hover:text-foreground transition-colors p-1.5"
             title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
