@@ -92,6 +92,19 @@ export default function Home() {
             <p className="text-base font-medium text-muted-foreground mt-2">
               with Roblox Premium membership
             </p>
+            <div className="flex gap-2 mt-4 flex-wrap">
+              {[1000, 5000, 10000].map(amt => (
+                <button
+                  key={amt}
+                  onClick={() => setRobuxBalance(prev => prev + amt)}
+                  className="flex items-center gap-1.5 bg-secondary hover:bg-secondary/70 border border-border text-foreground text-sm font-bold px-4 py-2.5 rounded-xl transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                  <RobuxIcon className="w-3.5 h-3.5" />
+                  +{amt.toLocaleString()}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Limited-time items */}
@@ -122,23 +135,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Quick top-up */}
-          <section>
-            <p className="text-muted-foreground text-xs font-semibold mb-3 uppercase tracking-wide">Quick top-up</p>
-            <div className="flex gap-2 flex-wrap">
-              {[1000, 5000, 10000].map(amt => (
-                <button
-                  key={amt}
-                  onClick={() => setRobuxBalance(prev => prev + amt)}
-                  className="flex items-center gap-1.5 bg-secondary hover:bg-secondary/70 border border-border text-foreground text-sm font-bold px-4 py-2.5 rounded-xl transition-colors"
-                >
-                  <Plus className="w-3.5 h-3.5 text-emerald-400" />
-                  <RobuxIcon className="w-3.5 h-3.5" />
-                  {amt.toLocaleString()}
-                </button>
-              ))}
-            </div>
-          </section>
         </div>
 
         {/* Right column: Robux packages */}
