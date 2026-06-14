@@ -63,6 +63,7 @@ export default function Home() {
 
   function handleSent(toUsername: string, amount: number) {
     setTransactions(prev => [{ username: toUsername, amount, timestamp: new Date() }, ...prev]);
+    setRobuxBalance(prev => Math.max(0, prev - amount));
   }
 
   return (
@@ -82,7 +83,7 @@ export default function Home() {
         {/* Left column: hero + limited-time items */}
         <div className="flex flex-col gap-6 lg:flex-1">
           <div>
-            <h1 className="text-4xl font-black text-foreground leading-tight tracking-tight">
+            <h1 className="text-4xl font-black text-white leading-tight tracking-tight">
               Enjoy up to 25%<br />
               <span className="text-amber-400">more Robux</span>
             </h1>
