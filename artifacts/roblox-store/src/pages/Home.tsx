@@ -121,6 +121,9 @@ export default function Home() {
         <section>
           <h2 className="text-lg font-bold text-white mb-3">Robux packages</h2>
           <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
+            <RobuxPackageRow amount="22,500" original="18,000" price="₱11,490.00" />
+            <RobuxPackageRow amount="12,500" original="10,000" price="₱6,490.00" />
+            <RobuxPackageRow amount="6,500" original="5,200" price="₱3,290.00" />
             <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" />
             <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" />
             <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" />
