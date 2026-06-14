@@ -290,6 +290,15 @@ export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, 
                 >
                   <Check className="w-10 h-10 text-emerald-400" />
                 </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="space-y-1"
+                >
+                  <p className="text-white font-bold text-lg">
+                    Sent {amount.toLocaleString()} Robux to {foundUsername}
+                  </p>
+                </motion.div>
                 <button
                   data-testid="button-done"
                   onClick={onClose}

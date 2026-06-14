@@ -76,62 +76,67 @@ export default function Home() {
         onSettingsClick={() => setSettingsOpen(true)}
       />
 
-      <main className="px-4 pt-6 pb-28 flex flex-col gap-6 w-full max-w-md mx-auto">
+      <main className="px-4 pt-6 pb-28 w-full max-w-md mx-auto flex flex-col gap-6 lg:max-w-5xl lg:flex-row lg:items-start lg:gap-8">
 
         {/* Hero */}
-        <div>
-          <h1 className="text-4xl font-black text-white leading-tight tracking-tight">
-            Enjoy up to 25%<br />
-            <span className="text-amber-400">more Robux</span>
-          </h1>
-          <p className="text-base font-medium text-muted-foreground mt-2">
-            with Roblox Premium membership
-          </p>
+        {/* Left column: hero + limited-time items */}
+        <div className="flex flex-col gap-6 lg:flex-1">
+          <div>
+            <h1 className="text-4xl font-black text-white leading-tight tracking-tight">
+              Enjoy up to 25%<br />
+              <span className="text-amber-400">more Robux</span>
+            </h1>
+            <p className="text-base font-medium text-muted-foreground mt-2">
+              with Roblox Premium membership
+            </p>
+          </div>
+
+          {/* Limited-time items */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-bold text-white">Limited-time avatar items</h2>
+              <span className="bg-white/10 text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/10">
+                18 days left
+              </span>
+            </div>
+            <div className="flex flex-col gap-3">
+              <AvatarItemCard
+                title="Fractured Domino Crown"
+                value="24,000"
+                original="22,500"
+                price="₱11.49k"
+                imageUrl=""
+                itemIcon={<CrownIcon />}
+              />
+              <AvatarItemCard
+                title="Wings of the Pactbreaker"
+                value="11,000"
+                original="10,000"
+                price="₱5,700.00"
+                imageUrl=""
+                itemIcon={<WingsIcon />}
+              />
+            </div>
+          </section>
         </div>
 
-        {/* Limited-time items */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold text-white">Limited-time avatar items</h2>
-            <span className="bg-white/10 text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/10">
-              18 days left
-            </span>
-          </div>
-          <div className="flex flex-col gap-3">
-            <AvatarItemCard
-              title="Fractured Domino Crown"
-              value="24,000"
-              original="22,500"
-              price="₱11.49k"
-              imageUrl=""
-              itemIcon={<CrownIcon />}
-            />
-            <AvatarItemCard
-              title="Wings of the Pactbreaker"
-              value="11,000"
-              original="10,000"
-              price="₱5,700.00"
-              imageUrl=""
-              itemIcon={<WingsIcon />}
-            />
-          </div>
-        </section>
-
-        {/* Robux packages */}
-        <section>
-          <h2 className="text-lg font-bold text-white mb-3">Robux packages</h2>
-          <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
-            <RobuxPackageRow amount="22,500" original="18,000" price="₱11,490.00" />
-            <RobuxPackageRow amount="12,500" original="10,000" price="₱6,490.00" />
-            <RobuxPackageRow amount="6,500" original="5,200" price="₱3,290.00" />
-            <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" />
-            <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" />
-            <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" />
-            <RobuxPackageRow amount="1,500" original="1,200" price="₱799.00" />
-            <RobuxPackageRow amount="1,000" original="800" price="₱569.00" />
-            <RobuxPackageRow amount="500" original="400" price="₱269.00" isLast />
-          </div>
-        </section>
+        {/* Right column: Robux packages */}
+        <div className="lg:w-80 lg:sticky lg:top-[90px]">
+          <section>
+            <h2 className="text-lg font-bold text-white mb-3">Robux packages</h2>
+            <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
+              <RobuxPackageRow amount="22,500" original="18,000" price="₱11,490.00" />
+              <RobuxPackageRow amount="12,500" original="10,000" price="₱6,490.00" />
+              <RobuxPackageRow amount="6,500" original="5,200" price="₱3,290.00" />
+              <RobuxPackageRow amount="5,250" original="4,500" price="₱2,890.00" />
+              <RobuxPackageRow amount="3,625" original="3,150" price="₱1,990.00" />
+              <RobuxPackageRow amount="2,000" original="1,700" price="₱1,150.00" />
+              <RobuxPackageRow amount="1,500" original="1,200" price="₱799.00" />
+              <RobuxPackageRow amount="1,000" original="800" price="₱569.00" />
+              <RobuxPackageRow amount="500" original="400" price="₱269.00" isLast />
+            </div>
+          </section>
+        </div>
 
       </main>
 
