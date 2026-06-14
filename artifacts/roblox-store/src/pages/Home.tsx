@@ -82,7 +82,7 @@ export default function Home() {
         {/* Left column: hero + limited-time items */}
         <div className="flex flex-col gap-6 lg:flex-1">
           <div>
-            <h1 className="text-4xl font-black text-white leading-tight tracking-tight">
+            <h1 className="text-4xl font-black text-foreground leading-tight tracking-tight">
               Enjoy up to 25%<br />
               <span className="text-amber-400">more Robux</span>
             </h1>
@@ -94,8 +94,8 @@ export default function Home() {
           {/* Limited-time items */}
           <section>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold text-white">Limited-time avatar items</h2>
-              <span className="bg-white/10 text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/10">
+              <h2 className="text-lg font-bold text-foreground">Limited-time avatar items</h2>
+              <span className="bg-secondary text-foreground text-xs font-bold px-3 py-1.5 rounded-full border border-border">
                 18 days left
               </span>
             </div>
@@ -123,7 +123,7 @@ export default function Home() {
         {/* Right column: Robux packages */}
         <div className="lg:w-80 lg:sticky lg:top-[90px]">
           <section>
-            <h2 className="text-lg font-bold text-white mb-3">Robux packages</h2>
+            <h2 className="text-lg font-bold text-foreground mb-3">Robux packages</h2>
             <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
               <RobuxPackageRow amount="22,500" original="18,000" price="₱11,490.00" />
               <RobuxPackageRow amount="12,500" original="10,000" price="₱6,490.00" />

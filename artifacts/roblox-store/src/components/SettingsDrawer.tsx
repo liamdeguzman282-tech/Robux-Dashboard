@@ -61,17 +61,15 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
           <motion.div
             initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="relative w-full max-w-md bg-[#16181f] rounded-t-3xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-md bg-card rounded-t-3xl shadow-2xl overflow-hidden"
             style={{ maxHeight: "88dvh", overflowY: "auto" }}
           >
-            {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-white/20" />
+              <div className="w-10 h-1 rounded-full bg-border" />
             </div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-white/8">
-              <span className="font-bold text-base text-white">Settings</span>
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+              <span className="font-bold text-base text-foreground">Settings</span>
               <button onClick={onClose} className="text-foreground/60 hover:text-foreground transition-colors p-1">
                 <X className="w-5 h-5" />
               </button>
@@ -79,13 +77,13 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
 
             <div className="px-5 py-5 flex flex-col gap-6">
 
-              {/* Profile section */}
+              {/* Profile */}
               <div>
                 <p className="text-muted-foreground text-xs font-semibold mb-3 uppercase tracking-wide">Profile</p>
-                <div className="bg-white/5 rounded-2xl border border-white/8 p-4 flex items-center gap-4">
-                  <RobloxAvatar username={username} size="w-14 h-14" ringClass="ring-2 ring-white/20" />
+                <div className="bg-secondary/40 rounded-2xl border border-border p-4 flex items-center gap-4">
+                  <RobloxAvatar username={username} size="w-14 h-14" ringClass="ring-2 ring-border" />
                   <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="font-bold text-white text-base truncate">{username}</span>
+                    <span className="font-bold text-foreground text-base truncate">{username}</span>
                     <span className="text-muted-foreground text-sm">@{username.toLowerCase()}</span>
                   </div>
                 </div>
@@ -94,9 +92,9 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
               {/* Robux balance editor */}
               <div>
                 <p className="text-muted-foreground text-xs font-semibold mb-3 uppercase tracking-wide">Robux Balance</p>
-                <div className="bg-white/5 rounded-2xl border border-white/8 p-4 flex items-center justify-between gap-3">
+                <div className="bg-secondary/40 rounded-2xl border border-border p-4 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <RobuxIcon className="w-5 h-5 text-amber-400" />
+                    <RobuxIcon className="w-5 h-5" />
                     {editingBalance ? (
                       <input
                         ref={inputRef}
@@ -105,10 +103,10 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
                         onChange={e => setBalanceInput(e.target.value)}
                         onBlur={commitBalance}
                         onKeyDown={e => { if (e.key === "Enter") commitBalance(); if (e.key === "Escape") setEditingBalance(false); }}
-                        className="bg-white/10 text-white font-bold text-lg rounded-lg px-3 py-1 outline-none focus:ring-2 focus:ring-primary w-36"
+                        className="bg-secondary text-foreground font-bold text-lg rounded-lg px-3 py-1 outline-none focus:ring-2 focus:ring-primary w-36 border border-border"
                       />
                     ) : (
-                      <span className="font-bold text-white text-lg">{robuxBalance.toLocaleString()}</span>
+                      <span className="font-bold text-foreground text-lg">{robuxBalance.toLocaleString()}</span>
                     )}
                   </div>
                   {editingBalance ? (
@@ -122,7 +120,7 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
                     <button
                       data-testid="button-edit-balance"
                       onClick={() => { setEditingBalance(true); setBalanceInput(String(robuxBalance)); }}
-                      className="flex items-center gap-1.5 bg-white/8 hover:bg-white/14 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors border border-white/8"
+                      className="flex items-center gap-1.5 bg-secondary hover:bg-secondary/70 text-foreground text-sm font-semibold px-4 py-2 rounded-xl transition-colors border border-border"
                     >
                       <Pencil className="w-3.5 h-3.5" /> Edit
                     </button>
@@ -151,16 +149,16 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
                       <div
                         key={i}
                         data-testid={`tx-${i}`}
-                        className="flex items-center gap-3 bg-white/5 rounded-2xl border border-white/8 p-3"
+                        className="flex items-center gap-3 bg-secondary/40 rounded-2xl border border-border p-3"
                       >
-                        <RobloxAvatar username={tx.username} size="w-10 h-10" ringClass="ring-1 ring-white/15" />
+                        <RobloxAvatar username={tx.username} size="w-10 h-10" ringClass="ring-1 ring-border" />
                         <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                          <span className="font-semibold text-white text-sm truncate">{tx.username}</span>
+                          <span className="font-semibold text-foreground text-sm truncate">{tx.username}</span>
                           <span className="text-muted-foreground text-xs">{timeAgo(tx.timestamp)}</span>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0">
-                          <RobuxIcon className="w-3.5 h-3.5 text-amber-400" />
-                          <span className="font-bold text-white text-sm">−{tx.amount.toLocaleString()}</span>
+                          <RobuxIcon className="w-3.5 h-3.5" />
+                          <span className="font-bold text-foreground text-sm">−{tx.amount.toLocaleString()}</span>
                         </div>
                       </div>
                     ))}
