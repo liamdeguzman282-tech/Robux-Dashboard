@@ -50,7 +50,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           <button data-testid="button-hamburger" className="text-foreground/70 hover:text-foreground transition-colors">
             <Menu className="h-5 w-5" />
           </button>
-          <span className="font-black text-xl tracking-tight text-foreground select-none">Roblox</span>
+          <img src="/roblox-icon.jpg" alt="Roblox" className="h-7 w-7 rounded-lg object-cover" />
         </div>
 
         {/* Right controls */}

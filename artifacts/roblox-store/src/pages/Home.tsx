@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Info } from "lucide-react";
 import Header from "@/components/Header";
 import RobuxPackageRow from "@/components/RobuxPackageRow";
 import SendModal from "@/components/SendModal";
@@ -7,12 +6,15 @@ import BuyModal, { type Package } from "@/components/BuyModal";
 import SettingsDrawer, { type Transaction } from "@/components/SettingsDrawer";
 
 const PACKAGES = [
-  { price: "₱11.49K",   mobile: "25,000", premium: "26,400", bonus: "1,400" },
-  { price: "₱5,700.00", mobile: "11,000", premium: "12,100", bonus: "1,100" },
-  { price: "₱2,890.00", mobile: "4,950",  premium: "5,800",  bonus: "850"   },
-  { price: "₱1,150.00", mobile: "1,870",  premium: "2,200",  bonus: "330"   },
-  { price: "₱569.00",   mobile: "880",    premium: "1,100",  bonus: "220"   },
-  { price: "₱269.00",   mobile: "440",    premium: "550",    bonus: "110"   },
+  { amount: "22,500", original: "18,000", price: "₱11,490.00" },
+  { amount: "12,500", original: "10,000", price: "₱6,490.00"  },
+  { amount: "6,500",  original: "5,200",  price: "₱3,290.00"  },
+  { amount: "5,250",  original: "4,500",  price: "₱2,890.00"  },
+  { amount: "3,625",  original: "3,150",  price: "₱1,990.00"  },
+  { amount: "2,000",  original: "1,700",  price: "₱1,150.00"  },
+  { amount: "1,500",  original: "1,200",  price: "₱799.00"    },
+  { amount: "1,000",  original: "800",    price: "₱569.00"    },
+  { amount: "500",    original: "400",    price: "₱269.00"    },
 ];
 
 export default function Home() {
@@ -41,49 +43,19 @@ export default function Home() {
         onSettingsClick={() => setSettingsOpen(true)}
       />
 
-      <main className="px-4 pt-8 pb-28 w-full max-w-3xl mx-auto flex flex-col gap-10">
-
-        {/* Hero — centered, large */}
-        <div className="text-center flex flex-col items-center gap-3">
-          <h1 className="text-5xl font-black text-white leading-tight tracking-tight">
-            Enjoy up to 25%<br />more Robux
-          </h1>
-          <p className="text-base text-muted-foreground max-w-md">
-            Premium members, get more Robux on computer, web, and with gift cards
-          </p>
+      <main className="px-4 pt-6 pb-28 w-full max-w-md mx-auto">
+        <div className="bg-card border border-card-border rounded-2xl overflow-hidden">
+          {PACKAGES.map((pkg, i) => (
+            <RobuxPackageRow
+              key={pkg.amount}
+              amount={pkg.amount}
+              original={pkg.original}
+              price={pkg.price}
+              isLast={i === PACKAGES.length - 1}
+              onBuy={() => setBuyPkg(pkg)}
+            />
+          ))}
         </div>
-
-        {/* Packages table */}
-        <section>
-          <div className="bg-card border border-border rounded-2xl overflow-hidden">
-            {/* Column headers */}
-            <div className="grid grid-cols-3 px-5 py-3 border-b border-border">
-              <span className="text-muted-foreground text-sm font-medium">Price</span>
-              <div className="flex items-center gap-1 justify-center">
-                <span className="text-muted-foreground text-sm font-medium">Mobile &amp; console</span>
-                <Info className="w-3.5 h-3.5 text-muted-foreground/60" />
-              </div>
-              <div className="flex items-center gap-1 justify-end">
-                <span className="text-muted-foreground text-sm font-medium">Computer, web &amp; gift cards</span>
-                <Info className="w-3.5 h-3.5 text-muted-foreground/60" />
-              </div>
-            </div>
-
-            {/* Rows */}
-            {PACKAGES.map((pkg, i) => (
-              <RobuxPackageRow
-                key={pkg.price}
-                price={pkg.price}
-                mobile={pkg.mobile}
-                premium={pkg.premium}
-                bonus={pkg.bonus}
-                isLast={i === PACKAGES.length - 1}
-                onBuy={() => setBuyPkg({ amount: pkg.premium, original: pkg.mobile, price: pkg.price })}
-              />
-            ))}
-          </div>
-        </section>
-
       </main>
 
       <BuyModal
