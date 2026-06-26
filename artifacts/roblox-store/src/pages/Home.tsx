@@ -169,6 +169,7 @@ export default function Home() {
       </main>
 
       <BuyModal
+        key={buyPkg ? buyPkg.amount + buyPkg.price : "closed"}
         pkg={buyPkg}
         onClose={() => setBuyPkg(null)}
         onConfirm={(robux) => setRobuxBalance(prev => prev + robux)}

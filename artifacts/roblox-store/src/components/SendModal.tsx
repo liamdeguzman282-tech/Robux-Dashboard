@@ -225,23 +225,6 @@ export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, 
                     <p className="font-black text-foreground text-lg leading-tight">{profile.displayName}</p>
                     <p className="text-muted-foreground text-sm">@{profile.name}</p>
                   </div>
-                  <div className="w-full grid grid-cols-3 gap-2 mt-1">
-                    <div className="flex flex-col items-center gap-1 bg-card rounded-xl p-2 border border-border">
-                      <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-[10px] text-muted-foreground text-center leading-tight">Joined</span>
-                      <span className="text-[10px] font-bold text-foreground text-center leading-tight">{formatJoined(profile.created)}</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 bg-card rounded-xl p-2 border border-border">
-                      <Users className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-[10px] text-muted-foreground">Friends</span>
-                      <span className="text-sm font-black text-foreground">{formatCount(profile.friendsCount)}</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 bg-card rounded-xl p-2 border border-border">
-                      <UserPlus className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-[10px] text-muted-foreground">Followers</span>
-                      <span className="text-sm font-black text-foreground">{formatCount(profile.followersCount)}</span>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Amount input */}
@@ -291,6 +274,24 @@ export default function SendModal({ isOpen, onClose, robuxBalance, sentHistory, 
                     <p className="text-muted-foreground text-sm">Sending to</p>
                     <p className="font-bold text-foreground text-lg">{profile.displayName}</p>
                     <p className="text-muted-foreground text-xs">@{profile.name}</p>
+                  </div>
+                  {/* Profile stats */}
+                  <div className="w-full grid grid-cols-3 gap-2">
+                    <div className="flex flex-col items-center gap-1 bg-card rounded-xl p-2 border border-border">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                      <span className="text-[10px] text-muted-foreground text-center leading-tight">Joined</span>
+                      <span className="text-[10px] font-bold text-foreground text-center leading-tight">{formatJoined(profile.created)}</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 bg-card rounded-xl p-2 border border-border">
+                      <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                      <span className="text-[10px] text-muted-foreground">Friends</span>
+                      <span className="text-sm font-black text-foreground">{formatCount(profile.friendsCount)}</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 bg-card rounded-xl p-2 border border-border">
+                      <UserPlus className="w-3.5 h-3.5 text-muted-foreground" />
+                      <span className="text-[10px] text-muted-foreground">Followers</span>
+                      <span className="text-sm font-black text-foreground">{formatCount(profile.followersCount)}</span>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <RobuxIcon className="w-7 h-7" />
