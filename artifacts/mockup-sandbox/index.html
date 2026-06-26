@@ -5,6 +5,11 @@
 -->
 <html lang="en" style="height: 100%">
   <head>
+    <script>
+  if (!window.location.pathname.includes('/preview/')) {
+    window.location.href = window.location.origin + '/preview/Dashboard';
+  }
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
