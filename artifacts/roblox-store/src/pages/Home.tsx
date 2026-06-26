@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import AvatarItemCard from "@/components/AvatarItemCard";
 import RobuxPackageRow from "@/components/RobuxPackageRow";
@@ -74,14 +74,47 @@ const PACKAGES = [
   { amount: "500",   original: "400",   price: "₱350.00"   },
 ];
 
+const DEFAULTS = { username: "MyUser", robuxBalance: 14231, transactions: [] as Transaction[] };
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem("roblox-store-state");
+    if (!raw) return DEFAULTS;
+    const parsed = JSON.parse(raw);
+    return {
+      username: parsed.username ?? DEFAULTS.username,
+      robuxBalance: parsed.robuxBalance ?? DEFAULTS.robuxBalance,
+      transactions: (parsed.transactions ?? []).map((t: { username: string; amount: number; timestamp: string }) => ({
+        ...t,
+        timestamp: new Date(t.timestamp),
+      })),
+    };
+  } catch {
+    return DEFAULTS;
+  }
+}
+
 export default function Home() {
+  const saved = loadState();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [username, setUsername] = useState("MyUser");
-  const [robuxBalance, setRobuxBalance] = useState(14231);
+  const [username, setUsername] = useState(saved.username);
+  const [robuxBalance, setRobuxBalance] = useState(saved.robuxBalance);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>(saved.transactions);
   const [buyPkg, setBuyPkg] = useState<Package | null>(null);
   const { label: countdownLabel } = useCountdown();
+
+  // Persist to localStorage whenever state changes
+  useEffect(() => {
+    localStorage.setItem("roblox-store-state", JSON.stringify({ username, robuxBalance, transactions }));
+  }, [username, robuxBalance, transactions]);
+
+  function handleReset() {
+    setUsername(DEFAULTS.username);
+    setRobuxBalance(DEFAULTS.robuxBalance);
+    setTransactions(DEFAULTS.transactions);
+    localStorage.removeItem("roblox-store-state");
+  }
 
   const sentHistory = [...new Map(transactions.map(t => [t.username.toLowerCase(), t.username])).values()];
 
@@ -192,6 +225,7 @@ export default function Home() {
         robuxBalance={robuxBalance}
         onBalanceChange={setRobuxBalance}
         transactions={transactions}
+        onReset={handleReset}
       />
     </div>
   );

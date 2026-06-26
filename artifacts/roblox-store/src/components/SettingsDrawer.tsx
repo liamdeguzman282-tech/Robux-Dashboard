@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Pencil, Check, Clock } from "lucide-react";
+import { X, Pencil, Check, Clock, RotateCcw } from "lucide-react";
 import RobuxIcon from "@/components/RobuxIcon";
 import RobloxAvatar from "@/components/RobloxAvatar";
 
@@ -17,6 +17,7 @@ interface SettingsDrawerProps {
   robuxBalance: number;
   onBalanceChange: (bal: number) => void;
   transactions: Transaction[];
+  onReset: () => void;
 }
 
 function timeAgo(date: Date): string {
@@ -29,7 +30,7 @@ function timeAgo(date: Date): string {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance, onBalanceChange, transactions }: SettingsDrawerProps) {
+export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance, onBalanceChange, transactions, onReset }: SettingsDrawerProps) {
   const [editingBalance, setEditingBalance] = useState(false);
   const [balanceInput, setBalanceInput] = useState(String(robuxBalance));
   const inputRef = useRef<HTMLInputElement>(null);
@@ -164,6 +165,19 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Reset */}
+              <div>
+                <p className="text-muted-foreground text-xs font-semibold mb-3 uppercase tracking-wide">Danger Zone</p>
+                <button
+                  onClick={() => { onReset(); onClose(); }}
+                  className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-3.5 rounded-xl transition-colors border border-red-500/30 text-sm"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Reset everything to defaults
+                </button>
+                <p className="text-muted-foreground/60 text-xs text-center mt-2">Clears balance, username, and all transaction history</p>
               </div>
 
             </div>
