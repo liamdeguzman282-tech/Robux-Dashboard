@@ -7,9 +7,10 @@ interface AvatarItemCardProps {
   price: string;
   imageUrl: string;
   itemIcon: React.ReactNode;
+  onBuy?: () => void;
 }
 
-export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon }: AvatarItemCardProps) {
+export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon, onBuy }: AvatarItemCardProps) {
   return (
     <div
       data-testid={`card-avatar-item-${title.replace(/\s+/g, '-').toLowerCase()}`}
@@ -48,6 +49,7 @@ export default function AvatarItemCard({ title, value, original, price, imageUrl
         </div>
         <button
           data-testid={`button-buy-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          onClick={onBuy}
           className="bg-secondary hover:bg-secondary/80 text-foreground font-bold text-sm px-5 py-2 rounded-xl transition-colors border border-border"
         >
           {price}
