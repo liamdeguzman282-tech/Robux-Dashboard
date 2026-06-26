@@ -135,11 +135,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           <button className="hover:text-foreground transition-colors">Charts</button>
           <button className="hover:text-foreground transition-colors">Marketplace</button>
           <button className="hover:text-foreground transition-colors">Create</button>
-          <span className="w-px h-4 bg-border" />
-          <button className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <RobuxIcon className="w-4 h-4" />
-            <span className="text-amber-500 font-bold">{robuxBalance.toLocaleString()}</span>
-          </button>
+          <button className="hover:text-foreground transition-colors">Robux</button>
         </nav>
         <button
           data-testid="button-send"
@@ -156,6 +152,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           <button className="hover:text-foreground transition-colors">Charts</button>
           <button className="hover:text-foreground transition-colors">Marketplace</button>
           <button className="hover:text-foreground transition-colors">Create</button>
+          <button className="hover:text-foreground transition-colors">Robux</button>
         </nav>
         <button
           data-testid="button-send"
