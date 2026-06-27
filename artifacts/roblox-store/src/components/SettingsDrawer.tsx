@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Pencil, Check, Clock, RotateCcw } from "lucide-react";
+import { X, Pencil, Check, Clock, RotateCcw, Shield, CalendarDays, Key, Infinity } from "lucide-react";
 import RobuxIcon from "@/components/RobuxIcon";
 import RobloxAvatar from "@/components/RobloxAvatar";
+import { loadSession, isSessionValid, daysRemaining } from "@/lib/keys";
 
 export interface Transaction {
   username: string;
@@ -28,6 +29,85 @@ function timeAgo(date: Date): string {
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return `${hrs}h ago`;
   return `${Math.floor(hrs / 24)}d ago`;
+}
+
+function fmt(ts: number) {
+  return new Date(ts).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
+const TYPE_STYLE = {
+  "7-Day":    { color: "text-blue-400",   bg: "bg-blue-500/15",   border: "border-blue-500/30",   label: "7-Day Access"    },
+  "30-Day":   { color: "text-violet-400", bg: "bg-violet-500/15", border: "border-violet-500/30", label: "30-Day Access"   },
+  "Lifetime": { color: "text-amber-400",  bg: "bg-amber-500/15",  border: "border-amber-500/30",  label: "Lifetime Access" },
+} as const;
+
+function KeyStatus() {
+  const session = loadSession();
+  if (!session || !isSessionValid(session)) {
+    return (
+      <div className="bg-secondary/40 rounded-2xl border border-border p-4 flex items-center gap-3">
+        <Shield className="w-5 h-5 text-muted-foreground/40" />
+        <span className="text-muted-foreground text-sm">No active key</span>
+      </div>
+    );
+  }
+
+  const days = daysRemaining(session);
+  const style = TYPE_STYLE[session.type] ?? TYPE_STYLE["Lifetime"];
+  const maskedKey = session.key.slice(0, 5) + "••••-••••-" + session.key.slice(-4);
+
+  let pct = 100;
+  if (session.expiresAt !== null) {
+    const total = session.expiresAt - session.activatedAt;
+    const elapsed = Date.now() - session.activatedAt;
+    pct = Math.max(0, Math.min(100, ((total - elapsed) / total) * 100));
+  }
+
+  return (
+    <div className={`rounded-2xl border p-4 flex flex-col gap-3 ${style.bg} ${style.border}`}>
+      {/* Type label */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Shield className={`w-4 h-4 ${style.color}`} />
+          <span className={`font-bold text-sm ${style.color}`}>{style.label}</span>
+        </div>
+        {days === null
+          ? <span className={`flex items-center gap-1 text-xs font-bold ${style.color}`}><Infinity className="w-3.5 h-3.5" /> Forever</span>
+          : <span className={`text-xs font-black ${style.color}`}>{days}d left</span>
+        }
+      </div>
+
+      {/* Key */}
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-muted-foreground flex items-center gap-1.5"><Key className="w-3 h-3" /> Key</span>
+        <span className={`font-mono font-bold ${style.color}`}>{maskedKey}</span>
+      </div>
+
+      {/* Activated */}
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-muted-foreground flex items-center gap-1.5"><CalendarDays className="w-3 h-3" /> Activated</span>
+        <span className="font-semibold text-foreground">{fmt(session.activatedAt)}</span>
+      </div>
+
+      {/* Expires */}
+      {session.expiresAt !== null && (
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-muted-foreground flex items-center gap-1.5"><CalendarDays className="w-3 h-3" /> Expires</span>
+          <span className="font-semibold text-foreground">{fmt(session.expiresAt)}</span>
+        </div>
+      )}
+
+      {/* Progress bar */}
+      {session.expiresAt !== null && (
+        <div className="w-full h-1.5 bg-black/20 rounded-full overflow-hidden mt-1">
+          <div
+            className={`h-full rounded-full ${style.color.replace("text-", "bg-")}`}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance, onBalanceChange, transactions, onReset }: SettingsDrawerProps) {
@@ -88,6 +168,12 @@ export default function SettingsDrawer({ isOpen, onClose, username, robuxBalance
                     <span className="text-muted-foreground text-sm">@{username.toLowerCase()}</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Access Key Status */}
+              <div>
+                <p className="text-muted-foreground text-xs font-semibold mb-3 uppercase tracking-wide">Access Key</p>
+                <KeyStatus />
               </div>
 
               {/* Robux balance editor */}
