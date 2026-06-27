@@ -11,57 +11,195 @@ import { useCountdown } from "@/hooks/useCountdown";
 
 const FedoraIcon = () => (
   <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="58" rx="32" ry="7" fill="url(#brimG)" opacity="0.9"/>
-    <path d="M18 52 Q20 36 40 34 Q60 36 62 52 Z" fill="url(#hatG)"/>
-    <path d="M28 34 Q30 20 40 18 Q50 20 52 34 Z" fill="url(#crownG)"/>
-    <path d="M22 50 Q30 42 38 40 Q46 42 58 50" stroke="#93c5fd" strokeWidth="1.5" fill="none" opacity="0.5"/>
-    <ellipse cx="40" cy="34" rx="12" ry="3" fill="#1d4ed8" opacity="0.6"/>
-    <circle cx="30" cy="44" r="2" fill="#bfdbfe" opacity="0.8"/>
-    <circle cx="50" cy="42" r="1.5" fill="#bfdbfe" opacity="0.6"/>
-    <circle cx="40" cy="30" r="1" fill="#e0f2fe" opacity="0.9"/>
     <defs>
-      <linearGradient id="brimG" x1="8" y1="51" x2="72" y2="65" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#1e3a5f"/>
-        <stop offset="100%" stopColor="#0f1f3d"/>
+      {/* Cast shadow */}
+      <radialGradient id="fShadow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="#000" stopOpacity="0.35"/>
+        <stop offset="100%" stopColor="#000" stopOpacity="0"/>
+      </radialGradient>
+      {/* Brim top face */}
+      <radialGradient id="fBrimTop" cx="40%" cy="35%" r="60%">
+        <stop offset="0%" stopColor="#3b6fd4"/>
+        <stop offset="60%" stopColor="#1a3a8a"/>
+        <stop offset="100%" stopColor="#0d1f4f"/>
+      </radialGradient>
+      {/* Brim underside */}
+      <linearGradient id="fBrimUnder" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#0a1533"/>
+        <stop offset="100%" stopColor="#050c1f"/>
       </linearGradient>
-      <linearGradient id="hatG" x1="18" y1="34" x2="62" y2="58" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#1d4ed8"/>
-        <stop offset="100%" stopColor="#1e3a8a"/>
+      {/* Crown side */}
+      <linearGradient id="fCrownSide" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#2563eb"/>
+        <stop offset="40%" stopColor="#1d4ed8"/>
+        <stop offset="100%" stopColor="#0f2070"/>
       </linearGradient>
-      <linearGradient id="crownG" x1="28" y1="18" x2="52" y2="34" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#60a5fa"/>
-        <stop offset="100%" stopColor="#2563eb"/>
+      {/* Crown top */}
+      <radialGradient id="fCrownTop" cx="38%" cy="38%" r="55%">
+        <stop offset="0%" stopColor="#93c5fd"/>
+        <stop offset="45%" stopColor="#3b82f6"/>
+        <stop offset="100%" stopColor="#1e40af"/>
+      </radialGradient>
+      {/* Specular highlight */}
+      <radialGradient id="fSpec" cx="35%" cy="30%" r="45%">
+        <stop offset="0%" stopColor="#fff" stopOpacity="0.55"/>
+        <stop offset="100%" stopColor="#fff" stopOpacity="0"/>
+      </radialGradient>
+      {/* Band gradient */}
+      <linearGradient id="fBand" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#0a0f2a"/>
+        <stop offset="40%" stopColor="#1a237e"/>
+        <stop offset="100%" stopColor="#0a0f2a"/>
       </linearGradient>
     </defs>
+
+    {/* Cast shadow on ground */}
+    <ellipse cx="40" cy="72" rx="26" ry="5" fill="url(#fShadow)"/>
+
+    {/* Brim underside (visible rim at back) */}
+    <ellipse cx="40" cy="52" rx="30" ry="7.5" fill="url(#fBrimUnder)"/>
+
+    {/* Brim top face */}
+    <ellipse cx="40" cy="50" rx="30" ry="7.5" fill="url(#fBrimTop)"/>
+
+    {/* Brim front highlight edge */}
+    <ellipse cx="40" cy="57.5" rx="30" ry="2" fill="#1a3a8a" opacity="0.6"/>
+    <path d="M10 50 Q40 44 70 50" stroke="#4f8ef7" strokeWidth="0.8" fill="none" opacity="0.5"/>
+
+    {/* Crown body (sides) — slightly curved trapezoid */}
+    <path d="M24 50 Q22 35 28 22 Q34 16 40 15 Q46 16 52 22 Q58 35 56 50 Q48 46 40 46 Q32 46 24 50Z"
+          fill="url(#fCrownSide)"/>
+
+    {/* Crown dent/indent at top center */}
+    <path d="M33 22 Q36 28 40 26 Q44 28 47 22 Q44 16 40 15 Q36 16 33 22Z"
+          fill="#1e40af" opacity="0.7"/>
+
+    {/* Hat band */}
+    <path d="M25 46 Q26 42 28 40 Q34 38 40 38 Q46 38 52 40 Q54 42 55 46 Q48 43 40 43 Q32 43 25 46Z"
+          fill="url(#fBand)"/>
+    {/* Band highlight */}
+    <path d="M29 41 Q34 39.5 40 39.5 Q46 39.5 51 41" stroke="#3b5bdb" strokeWidth="0.6" fill="none" opacity="0.6"/>
+
+    {/* Crown top face */}
+    <ellipse cx="40" cy="21" rx="12.5" ry="6" fill="url(#fCrownTop)"/>
+
+    {/* Specular highlight on crown face */}
+    <ellipse cx="34" cy="32" rx="10" ry="14" fill="url(#fSpec)"/>
+
+    {/* Top edge highlight */}
+    <path d="M30 18 Q40 14 50 18" stroke="#bfdbfe" strokeWidth="1.2" fill="none" opacity="0.7" strokeLinecap="round"/>
+
+    {/* Arcane sparkles */}
+    <circle cx="29" cy="55" r="1.2" fill="#60a5fa" opacity="0.9"/>
+    <circle cx="53" cy="54" r="1" fill="#93c5fd" opacity="0.7"/>
+    <circle cx="40" cy="12" r="1.5" fill="#e0f2fe" opacity="0.85"/>
+    <circle cx="35" cy="25" r="0.8" fill="#fff" opacity="0.6"/>
+    <circle cx="47" cy="28" r="0.7" fill="#fff" opacity="0.5"/>
   </svg>
 );
 
 const SunMoonWingsIcon = () => (
   <svg viewBox="0 0 80 80" className="w-16 h-16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M40 55 C28 38 6 30 2 18 C14 23 28 34 40 55Z" fill="url(#wSilver)" opacity="0.95"/>
-    <path d="M40 55 C36 35 12 20 6 10 C20 17 34 32 40 55Z" fill="url(#wSilver2)" opacity="0.7"/>
-    <path d="M40 55 C52 38 74 30 78 18 C66 23 52 34 40 55Z" fill="url(#wGold)" opacity="0.95"/>
-    <path d="M40 55 C44 35 68 20 74 10 C60 17 46 32 40 55Z" fill="url(#wGold2)" opacity="0.7"/>
-    <circle cx="30" cy="28" r="3" fill="#e2e8f0" opacity="0.6"/>
-    <circle cx="52" cy="26" r="2.5" fill="#fbbf24" opacity="0.7"/>
     <defs>
-      <linearGradient id="wSilver" x1="2" y1="18" x2="40" y2="55" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#e2e8f0"/>
-        <stop offset="100%" stopColor="#94a3b8"/>
+      {/* Drop shadow */}
+      <radialGradient id="wShadow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="#000" stopOpacity="0.3"/>
+        <stop offset="100%" stopColor="#000" stopOpacity="0"/>
+      </radialGradient>
+      {/* Silver wing — main face */}
+      <linearGradient id="wSilMain" x1="2" y1="10" x2="40" y2="58" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#f0f4ff"/>
+        <stop offset="40%" stopColor="#94a3b8"/>
+        <stop offset="100%" stopColor="#475569"/>
       </linearGradient>
-      <linearGradient id="wSilver2" x1="6" y1="10" x2="40" y2="55" gradientUnits="userSpaceOnUse">
+      {/* Silver wing — inner feather shadow */}
+      <linearGradient id="wSilInner" x1="14" y1="14" x2="40" y2="58" gradientUnits="userSpaceOnUse">
         <stop offset="0%" stopColor="#cbd5e1"/>
-        <stop offset="100%" stopColor="#64748b"/>
+        <stop offset="100%" stopColor="#1e293b"/>
       </linearGradient>
-      <linearGradient id="wGold" x1="78" y1="18" x2="40" y2="55" gradientUnits="userSpaceOnUse">
+      {/* Silver edge glow */}
+      <linearGradient id="wSilEdge" x1="2" y1="12" x2="20" y2="40" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#e2e8f0"/>
+        <stop offset="100%" stopColor="#93c5fd"/>
+      </linearGradient>
+      {/* Gold wing — main face */}
+      <linearGradient id="wGoldMain" x1="78" y1="10" x2="40" y2="58" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#fef9c3"/>
+        <stop offset="40%" stopColor="#f59e0b"/>
+        <stop offset="100%" stopColor="#92400e"/>
+      </linearGradient>
+      {/* Gold wing — inner shadow */}
+      <linearGradient id="wGoldInner" x1="66" y1="14" x2="40" y2="58" gradientUnits="userSpaceOnUse">
         <stop offset="0%" stopColor="#fde68a"/>
-        <stop offset="100%" stopColor="#d97706"/>
+        <stop offset="100%" stopColor="#451a03"/>
       </linearGradient>
-      <linearGradient id="wGold2" x1="74" y1="10" x2="40" y2="55" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#fbbf24"/>
-        <stop offset="100%" stopColor="#b45309"/>
+      {/* Gold edge glow */}
+      <linearGradient id="wGoldEdge" x1="78" y1="12" x2="60" y2="40" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#fef08a"/>
+        <stop offset="100%" stopColor="#f97316"/>
       </linearGradient>
+      {/* Center orb */}
+      <radialGradient id="wOrb" cx="38%" cy="35%" r="55%">
+        <stop offset="0%" stopColor="#f8fafc"/>
+        <stop offset="40%" stopColor="#a78bfa"/>
+        <stop offset="100%" stopColor="#4c1d95"/>
+      </radialGradient>
+      <radialGradient id="wOrbGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.6"/>
+        <stop offset="100%" stopColor="#7c3aed" stopOpacity="0"/>
+      </radialGradient>
     </defs>
+
+    {/* Ground shadow */}
+    <ellipse cx="40" cy="72" rx="22" ry="4" fill="url(#wShadow)"/>
+
+    {/* === LEFT WING (silver / moon) === */}
+    {/* Outer primary feathers — back layer */}
+    <path d="M40 54 C34 44 18 34 4 16 C10 20 18 28 22 38 C28 46 36 52 40 54Z"
+          fill="url(#wSilInner)" opacity="0.55"/>
+    {/* Mid feathers */}
+    <path d="M40 54 C32 42 14 30 6 12 C14 18 24 30 30 42 C34 48 38 52 40 54Z"
+          fill="url(#wSilMain)" opacity="0.85"/>
+    {/* Top primary — brightest face */}
+    <path d="M40 54 C36 40 20 22 8 8 C18 16 28 28 34 42 C37 48 39 52 40 54Z"
+          fill="url(#wSilEdge)" opacity="0.75"/>
+    {/* Feather separators — depth lines */}
+    <path d="M40 54 C36 44 26 32 14 20" stroke="#475569" strokeWidth="0.7" opacity="0.45" fill="none"/>
+    <path d="M40 54 C34 46 20 36 8 24" stroke="#94a3b8" strokeWidth="0.5" opacity="0.35" fill="none"/>
+    <path d="M40 54 C38 46 30 36 20 26" stroke="#e2e8f0" strokeWidth="0.5" opacity="0.5" fill="none"/>
+    {/* Specular tip highlights */}
+    <circle cx="9" cy="10" r="2.5" fill="#f0f9ff" opacity="0.8"/>
+    <circle cx="6" cy="14" r="1.5" fill="#e0f2fe" opacity="0.6"/>
+    <circle cx="13" cy="8" r="1.2" fill="#bfdbfe" opacity="0.7"/>
+
+    {/* === RIGHT WING (gold / sun) === */}
+    {/* Outer primary feathers — back layer */}
+    <path d="M40 54 C46 44 62 34 76 16 C70 20 62 28 58 38 C52 46 44 52 40 54Z"
+          fill="url(#wGoldInner)" opacity="0.55"/>
+    {/* Mid feathers */}
+    <path d="M40 54 C48 42 66 30 74 12 C66 18 56 30 50 42 C46 48 42 52 40 54Z"
+          fill="url(#wGoldMain)" opacity="0.85"/>
+    {/* Top primary — brightest face */}
+    <path d="M40 54 C44 40 60 22 72 8 C62 16 52 28 46 42 C43 48 41 52 40 54Z"
+          fill="url(#wGoldEdge)" opacity="0.75"/>
+    {/* Feather separators */}
+    <path d="M40 54 C44 44 54 32 66 20" stroke="#92400e" strokeWidth="0.7" opacity="0.45" fill="none"/>
+    <path d="M40 54 C46 46 60 36 72 24" stroke="#f59e0b" strokeWidth="0.5" opacity="0.35" fill="none"/>
+    <path d="M40 54 C42 46 50 36 60 26" stroke="#fde68a" strokeWidth="0.5" opacity="0.5" fill="none"/>
+    {/* Gold tip glows */}
+    <circle cx="71" cy="10" r="2.5" fill="#fef9c3" opacity="0.85"/>
+    <circle cx="74" cy="14" r="1.5" fill="#fde68a" opacity="0.7"/>
+    <circle cx="67" cy="8" r="1.2" fill="#fbbf24" opacity="0.75"/>
+
+    {/* === CENTER ORB === */}
+    {/* Outer glow ring */}
+    <circle cx="40" cy="52" r="8" fill="url(#wOrbGlow)"/>
+    {/* Orb body */}
+    <circle cx="40" cy="52" r="5.5" fill="url(#wOrb)"/>
+    {/* Orb specular */}
+    <circle cx="38" cy="50" r="2" fill="#fff" opacity="0.55"/>
+    {/* Orb rim */}
+    <circle cx="40" cy="52" r="5.5" stroke="#7c3aed" strokeWidth="0.8" opacity="0.6" fill="none"/>
   </svg>
 );
 
