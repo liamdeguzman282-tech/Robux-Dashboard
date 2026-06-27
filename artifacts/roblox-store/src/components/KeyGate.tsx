@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Key, Loader2, AlertCircle, CheckCircle, Shield } from "lucide-react";
-import { createSession, saveSession, type KeySession, type KeyType } from "@/lib/keys";
+import { validateKey, createSession, saveSession, type KeySession } from "@/lib/keys";
 
 interface KeyGateProps {
   onUnlock: (session: KeySession) => void;
@@ -19,43 +19,31 @@ export default function KeyGate({ onUnlock }: KeyGateProps) {
   const [success, setSuccess] = useState<{ label: string; color: string; bg: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit() {
+  function handleSubmit() {
     const trimmed = input.trim();
     if (!trimmed) { setError("Please enter an access key."); return; }
 
     setLoading(true);
     setError("");
 
-    try {
-      const res = await fetch("/api/keys/redeem", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: trimmed }),
-      });
+    setTimeout(() => {
+      const valid = validateKey(trimmed);
+      setLoading(false);
 
-      const data = await res.json() as { type?: string; days?: number | null; error?: string };
-
-      if (!res.ok) {
-        setError(data.error ?? "Something went wrong. Please try again.");
-        setLoading(false);
+      if (!valid) {
+        setError("Invalid key. Please check and try again.");
         return;
       }
 
-      const type = data.type as KeyType;
-      const days = data.days ?? null;
-      const style = TYPE_STYLE[type];
+      const style = TYPE_STYLE[valid.type];
       setSuccess(style);
-      setLoading(false);
 
       setTimeout(() => {
-        const session = createSession({ key: trimmed.toUpperCase(), type, days });
+        const session = createSession(valid);
         saveSession(session);
         onUnlock(session);
       }, 1400);
-    } catch {
-      setError("Could not reach the server. Please try again.");
-      setLoading(false);
-    }
+    }, 800);
   }
 
   function handleInput(val: string) {
@@ -65,6 +53,7 @@ export default function KeyGate({ onUnlock }: KeyGateProps) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background">
+      {/* Subtle animated background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-violet-500/5 blur-3xl" />
@@ -76,13 +65,16 @@ export default function KeyGate({ onUnlock }: KeyGateProps) {
         transition={{ type: "spring", damping: 24, stiffness: 220 }}
         className="relative w-full max-w-sm mx-4 bg-card border border-card-border rounded-3xl shadow-2xl overflow-hidden"
       >
+        {/* Header stripe */}
         <div className="h-1 w-full bg-gradient-to-r from-primary via-violet-500 to-amber-400" />
 
         <div className="px-7 py-8 flex flex-col items-center gap-6">
+          {/* Icon */}
           <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
             <Shield className="w-8 h-8 text-primary" />
           </div>
 
+          {/* Title */}
           <div className="text-center">
             <h1 className="text-xl font-black text-foreground tracking-tight">Premium Access Required</h1>
             <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed">
@@ -91,6 +83,7 @@ export default function KeyGate({ onUnlock }: KeyGateProps) {
             </p>
           </div>
 
+          {/* Input */}
           <div className="w-full flex flex-col gap-3">
             <div className="relative">
               <Key className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
@@ -117,6 +110,7 @@ export default function KeyGate({ onUnlock }: KeyGateProps) {
                   {error}
                 </motion.div>
               )}
+
               {success && (
                 <motion.div
                   key="success"

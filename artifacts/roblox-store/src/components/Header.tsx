@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Menu, Search, Settings, Pencil, Check, Sun, Moon } from "lucide-react";
+import { Menu, Search, Settings, Pencil, Check, Sun, Moon, Clock, Infinity } from "lucide-react";
 import RobuxIcon from "@/components/RobuxIcon";
 import RobloxAvatar from "@/components/RobloxAvatar";
 import { useTheme } from "@/contexts/ThemeContext";
+import { loadSession, isSessionValid, daysRemaining } from "@/lib/keys";
 
 interface HeaderProps {
   username: string;
@@ -11,6 +12,33 @@ interface HeaderProps {
   onBalanceChange: (bal: number) => void;
   onSendClick: () => void;
   onSettingsClick: () => void;
+}
+
+function AccessBadge() {
+  const session = loadSession();
+  if (!session || !isSessionValid(session)) return null;
+
+  const days = daysRemaining(session);
+
+  if (days === null) {
+    return (
+      <div className="hidden sm:flex items-center gap-1 bg-amber-500/15 border border-amber-500/30 text-amber-400 rounded-full px-2.5 py-1 text-xs font-bold">
+        <Infinity className="w-3 h-3" />
+        <span>Lifetime</span>
+      </div>
+    );
+  }
+
+  const color = session.type === "7-Day"
+    ? "bg-blue-500/15 border-blue-500/30 text-blue-400"
+    : "bg-violet-500/15 border-violet-500/30 text-violet-400";
+
+  return (
+    <div className={`hidden sm:flex items-center gap-1 border rounded-full px-2.5 py-1 text-xs font-bold ${color}`}>
+      <Clock className="w-3 h-3" />
+      <span>{days}d left</span>
+    </div>
+  );
 }
 
 export default function Header({ username, robuxBalance, onUsernameChange, onBalanceChange, onSendClick, onSettingsClick }: HeaderProps) {
@@ -42,7 +70,10 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
   return (
     <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-xl border-b-2 border-border">
 
+      {/* ── Row 1: Logo + right controls ── */}
       <div className="flex items-center justify-between px-4 h-[52px]">
+
+        {/* Left: hamburger + logo */}
         <div className="flex items-center gap-3">
           <button data-testid="button-hamburger" className="text-foreground/70 hover:text-foreground transition-colors">
             <Menu className="h-5 w-5" />
@@ -54,7 +85,13 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           />
         </div>
 
+        {/* Right controls */}
         <div className="flex items-center gap-1.5">
+
+          {/* Access badge */}
+          <AccessBadge />
+
+          {/* Avatar */}
           <div className="relative">
             <button
               data-testid="button-avatar"
@@ -81,10 +118,12 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             )}
           </div>
 
+          {/* Search — desktop only */}
           <button data-testid="button-search" className="hidden lg:flex text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Search className="h-5 w-5" />
           </button>
 
+          {/* Robux balance */}
           <button
             data-testid="button-robux-balance"
             onClick={() => { setEditingBalance(true); setBalanceInput(String(robuxBalance)); }}
@@ -108,6 +147,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
 
+          {/* Theme toggle */}
           <button
             data-testid="button-theme-toggle"
             onClick={toggle}
@@ -117,12 +157,14 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
+          {/* Settings */}
           <button data-testid="button-settings" onClick={onSettingsClick} className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Settings className="h-5 w-5" />
           </button>
         </div>
       </div>
 
+      {/* ── Row 2: Nav + Send (desktop) ── */}
       <div className="hidden lg:flex items-center justify-between px-6 py-3 border-t-2 border-border bg-secondary/20">
         <nav className="flex items-center gap-7 text-sm font-semibold text-foreground/60">
           <button className="hover:text-foreground transition-colors">Charts</button>
@@ -139,6 +181,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
         </button>
       </div>
 
+      {/* ── Row 2 mobile: slim Send bar ── */}
       <div className="flex lg:hidden items-center justify-between px-4 py-2 border-t border-border">
         <nav className="flex items-center gap-4 text-xs font-semibold text-foreground/50">
           <button className="hover:text-foreground transition-colors">Charts</button>
@@ -154,6 +197,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           ↑ Send
         </button>
       </div>
+
     </header>
   );
 }

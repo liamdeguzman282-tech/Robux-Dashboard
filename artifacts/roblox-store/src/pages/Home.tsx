@@ -276,17 +276,10 @@ export default function Home() {
       <main className="px-4 pt-6 pb-10 w-full max-w-md mx-auto flex flex-col gap-7">
 
         {/* Hero */}
-        <div className="flex flex-col gap-5">
+        <div>
           <h1 className="text-4xl font-black text-foreground leading-tight tracking-tight">
             Enjoy up to 25%<br />more Robux
           </h1>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-2.5 w-full bg-primary hover:bg-primary/90 active:scale-[0.97] text-white font-black text-lg py-4 rounded-2xl transition-all shadow-lg shadow-primary/30"
-          >
-            <span className="text-2xl leading-none">↑</span>
-            Send Robux
-          </button>
         </div>
 
         {/* Limited-time avatar items */}
