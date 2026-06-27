@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Menu, Search, Settings, Pencil, Check, Sun, Moon } from "lucide-react";
+import { Menu, Search, Settings, Pencil, Check, Sun, Moon, Clock, Infinity, Shield, CalendarDays, Key } from "lucide-react";
 import RobuxIcon from "@/components/RobuxIcon";
 import RobloxAvatar from "@/components/RobloxAvatar";
 import { useTheme } from "@/contexts/ThemeContext";
+import { loadSession, isSessionValid, daysRemaining } from "@/lib/keys";
 
 interface HeaderProps {
   username: string;
@@ -11,6 +12,118 @@ interface HeaderProps {
   onBalanceChange: (bal: number) => void;
   onSendClick: () => void;
   onSettingsClick: () => void;
+}
+
+const TYPE_STYLE = {
+  "7-Day":    { color: "text-blue-400",   bg: "bg-blue-500/15",   border: "border-blue-500/30",   label: "7-Day Access"    },
+  "30-Day":   { color: "text-violet-400", bg: "bg-violet-500/15", border: "border-violet-500/30", label: "30-Day Access"   },
+  "Lifetime": { color: "text-amber-400",  bg: "bg-amber-500/15",  border: "border-amber-500/30",  label: "Lifetime Access" },
+} as const;
+
+function fmt(ts: number) {
+  return new Date(ts).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
+function AccessBadge() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const session = loadSession();
+
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  if (!session || !isSessionValid(session)) return null;
+
+  const days = daysRemaining(session);
+  const style = TYPE_STYLE[session.type] ?? TYPE_STYLE["Lifetime"];
+  const maskedKey = session.key.slice(0, 5) + "****-****-" + session.key.slice(-4);
+
+  return (
+    <div className="relative hidden sm:block" ref={ref}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        className={`flex items-center gap-1 border rounded-full px-2.5 py-1 text-xs font-bold transition-opacity hover:opacity-80 ${style.bg} ${style.border} ${style.color}`}
+      >
+        {days === null
+          ? <><Infinity className="w-3 h-3" /> Lifetime</>
+          : <><Clock className="w-3 h-3" /> {days}d left</>
+        }
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-[calc(100%+8px)] w-64 bg-card border border-border rounded-2xl shadow-2xl z-50 overflow-hidden">
+          {/* Header stripe */}
+          <div className={`h-1 w-full ${style.bg.replace("/15", "/60")}`} />
+
+          <div className="p-4 flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <Shield className={`w-4 h-4 ${style.color}`} />
+              <span className={`font-bold text-sm ${style.color}`}>{style.label}</span>
+            </div>
+
+            <div className="flex flex-col gap-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground flex items-center gap-1.5">
+                  <Key className="w-3 h-3" /> Key
+                </span>
+                <span className="font-mono font-bold text-foreground">{maskedKey}</span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground flex items-center gap-1.5">
+                  <CalendarDays className="w-3 h-3" /> Activated
+                </span>
+                <span className="font-semibold text-foreground">{fmt(session.activatedAt)}</span>
+              </div>
+
+              {session.expiresAt !== null ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1.5">
+                      <CalendarDays className="w-3 h-3" /> Expires
+                    </span>
+                    <span className="font-semibold text-foreground">{fmt(session.expiresAt)}</span>
+                  </div>
+
+                  <div className={`flex items-center justify-between rounded-xl px-3 py-2 border mt-1 ${style.bg} ${style.border}`}>
+                    <span className={`font-semibold ${style.color}`}>Days remaining</span>
+                    <span className={`font-black text-base ${style.color}`}>{days}</span>
+                  </div>
+
+                  {/* Progress bar */}
+                  {(() => {
+                    const total = session.expiresAt - session.activatedAt;
+                    const elapsed = Date.now() - session.activatedAt;
+                    const pct = Math.max(0, Math.min(100, ((total - elapsed) / total) * 100));
+                    return (
+                      <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all ${style.color.replace("text-", "bg-")}`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    );
+                  })()}
+                </>
+              ) : (
+                <div className={`flex items-center justify-between rounded-xl px-3 py-2 border mt-1 ${style.bg} ${style.border}`}>
+                  <span className={`font-semibold ${style.color}`}>Access</span>
+                  <span className={`font-black ${style.color} flex items-center gap-1`}>
+                    <Infinity className="w-4 h-4" /> Never expires
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function Header({ username, robuxBalance, onUsernameChange, onBalanceChange, onSendClick, onSettingsClick }: HeaderProps) {
@@ -42,10 +155,7 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
   return (
     <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-xl border-b-2 border-border">
 
-      {/* ── Row 1: Logo + right controls ── */}
       <div className="flex items-center justify-between px-4 h-[52px]">
-
-        {/* Left: hamburger + logo */}
         <div className="flex items-center gap-3">
           <button data-testid="button-hamburger" className="text-foreground/70 hover:text-foreground transition-colors">
             <Menu className="h-5 w-5" />
@@ -57,10 +167,9 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           />
         </div>
 
-        {/* Right controls */}
         <div className="flex items-center gap-1.5">
+          <AccessBadge />
 
-          {/* Avatar (always visible) */}
           <div className="relative">
             <button
               data-testid="button-avatar"
@@ -87,12 +196,10 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             )}
           </div>
 
-          {/* Search — desktop only */}
           <button data-testid="button-search" className="hidden lg:flex text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Search className="h-5 w-5" />
           </button>
 
-          {/* Robux balance (always visible) */}
           <button
             data-testid="button-robux-balance"
             onClick={() => { setEditingBalance(true); setBalanceInput(String(robuxBalance)); }}
@@ -116,7 +223,6 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
 
-          {/* Theme toggle */}
           <button
             data-testid="button-theme-toggle"
             onClick={toggle}
@@ -126,14 +232,12 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
-          {/* Settings (always visible) */}
           <button data-testid="button-settings" onClick={onSettingsClick} className="text-foreground/70 hover:text-foreground transition-colors p-1.5">
             <Settings className="h-5 w-5" />
           </button>
         </div>
       </div>
 
-      {/* ── Row 2: Nav + Send (desktop only) ── */}
       <div className="hidden lg:flex items-center justify-between px-6 py-3 border-t-2 border-border bg-secondary/20">
         <nav className="flex items-center gap-7 text-sm font-semibold text-foreground/60">
           <button className="hover:text-foreground transition-colors">Charts</button>
@@ -150,7 +254,6 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
         </button>
       </div>
 
-      {/* ── Row 2 mobile: slim Send bar ── */}
       <div className="flex lg:hidden items-center justify-between px-4 py-2 border-t border-border">
         <nav className="flex items-center gap-4 text-xs font-semibold text-foreground/50">
           <button className="hover:text-foreground transition-colors">Charts</button>
@@ -166,7 +269,6 @@ export default function Header({ username, robuxBalance, onUsernameChange, onBal
           ↑ Send
         </button>
       </div>
-
     </header>
   );
 }
