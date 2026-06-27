@@ -20,10 +20,12 @@ export default function RobuxPackageRow({ amount, original, price, isLast, onBuy
           <RobuxIcon className="w-5 h-5" />
           <span className="font-bold text-lg text-foreground">{amount}</span>
         </div>
-        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-          <RobuxIcon className="w-3.5 h-3.5" />
-          <span className="line-through">{original}</span>
-        </div>
+        {amount !== original && (
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            <RobuxIcon className="w-3.5 h-3.5" />
+            <span className="line-through">{original}</span>
+          </div>
+        )}
       </div>
 
       <button

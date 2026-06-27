@@ -204,12 +204,13 @@ const SunMoonWingsIcon = () => (
 );
 
 const PACKAGES = [
-  { amount: "5,250", original: "4,500", price: "₱3,400.00" },
-  { amount: "3,625", original: "3,150", price: "₱1,990.00" },
-  { amount: "2,000", original: "1,700", price: "₱1,360.00" },
-  { amount: "1,500", original: "1,200", price: "₱799.00"   },
-  { amount: "1,000", original: "800",   price: "₱680.00"   },
-  { amount: "500",   original: "400",   price: "₱350.00"   },
+  { amount: "24,000", original: "22,500", price: "$199.99" },
+  { amount: "11,000", original: "10,000", price: "$99.99"  },
+  { amount: "5,250",  original: "4,500",  price: "$49.99"  },
+  { amount: "3,625",  original: "3,625",  price: "$34.99"  },
+  { amount: "2,000",  original: "1,700",  price: "$19.99"  },
+  { amount: "1,000",  original: "800",    price: "$9.99"   },
+  { amount: "500",    original: "400",    price: "$4.99"   },
 ];
 
 const DEFAULTS = { username: "MyUser", robuxBalance: 14231, transactions: [] as Transaction[] };
