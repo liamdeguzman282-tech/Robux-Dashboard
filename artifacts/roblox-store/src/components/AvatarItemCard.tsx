@@ -8,9 +8,10 @@ interface AvatarItemCardProps {
   imageUrl: string;
   itemIcon: React.ReactNode;
   onBuy?: () => void;
+  animateIcon?: boolean;
 }
 
-export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon, onBuy }: AvatarItemCardProps) {
+export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon, onBuy, animateIcon }: AvatarItemCardProps) {
   return (
     <div
       data-testid={`card-avatar-item-${title.replace(/\s+/g, '-').toLowerCase()}`}
@@ -21,7 +22,7 @@ export default function AvatarItemCard({ title, value, original, price, imageUrl
           {imageUrl ? (
             <img src={imageUrl} alt={title} className="w-full h-full object-cover" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
           ) : null}
-          <div className="flex items-center justify-center w-full h-full">
+          <div className={`flex items-center justify-center w-full h-full${animateIcon ? " spin-slow" : ""}`}>
             {itemIcon}
           </div>
         </div>

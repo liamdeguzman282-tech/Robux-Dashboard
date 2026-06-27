@@ -160,6 +160,7 @@ export default function Home() {
               imageUrl=""
               itemIcon={<FedoraIcon />}
               onBuy={() => setBuyPkg({ amount: "24,000", original: "22,500", price: "₱13.6k" })}
+              animateIcon
             />
             <AvatarItemCard
               title="Wings of the Sun and Moon"
@@ -169,6 +170,7 @@ export default function Home() {
               imageUrl=""
               itemIcon={<SunMoonWingsIcon />}
               onBuy={() => setBuyPkg({ amount: "11,000", original: "10,000", price: "₱6,800.00" })}
+              animateIcon
             />
           </div>
         </section>
