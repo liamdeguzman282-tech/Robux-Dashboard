@@ -9,26 +9,65 @@ interface AvatarItemCardProps {
   itemIcon: React.ReactNode;
   onBuy?: () => void;
   animateIcon?: boolean;
+  glowColor?: string;
 }
 
-export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon, onBuy, animateIcon }: AvatarItemCardProps) {
+export default function AvatarItemCard({ title, value, original, price, imageUrl, itemIcon, onBuy, animateIcon, glowColor = "#3b82f6" }: AvatarItemCardProps) {
   return (
     <div
       data-testid={`card-avatar-item-${title.replace(/\s+/g, '-').toLowerCase()}`}
       className="w-full rounded-2xl bg-card border border-card-border overflow-hidden"
     >
       <div className="flex items-center gap-4 p-4">
+
+        {/* Icon box */}
         <div
-          className="w-20 h-20 rounded-xl bg-secondary flex items-center justify-center shrink-0 overflow-hidden border border-border"
+          className="relative w-20 h-20 rounded-xl bg-secondary flex items-center justify-center shrink-0 border border-border overflow-visible"
           style={animateIcon ? { perspective: "200px" } : undefined}
         >
+          {animateIcon && (
+            <>
+              {/* Radial glow behind icon */}
+              <div
+                className="item-glow absolute inset-0 rounded-xl pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle at 50% 50%, ${glowColor}55 0%, ${glowColor}22 50%, transparent 75%)`,
+                  zIndex: 0,
+                }}
+              />
+
+              {/* Shimmer particles */}
+              <span
+                className="shimmer-p1 absolute w-1.5 h-1.5 rounded-full pointer-events-none"
+                style={{ top: "10%", left: "12%", background: glowColor, boxShadow: `0 0 4px 2px ${glowColor}99`, zIndex: 2 }}
+              />
+              <span
+                className="shimmer-p2 absolute w-1 h-1 rounded-full pointer-events-none"
+                style={{ top: "18%", right: "10%", background: "#fff", boxShadow: `0 0 4px 2px ${glowColor}88`, zIndex: 2 }}
+              />
+              <span
+                className="shimmer-p3 absolute w-1 h-1 rounded-full pointer-events-none"
+                style={{ bottom: "14%", left: "18%", background: glowColor, boxShadow: `0 0 5px 2px ${glowColor}77`, zIndex: 2 }}
+              />
+              <span
+                className="shimmer-p4 absolute w-1.5 h-1.5 rounded-full pointer-events-none"
+                style={{ bottom: "12%", right: "14%", background: "#fff", boxShadow: `0 0 4px 2px ${glowColor}66`, zIndex: 2 }}
+              />
+            </>
+          )}
+
           {imageUrl ? (
-            <img src={imageUrl} alt={title} className="w-full h-full object-cover" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+            <img src={imageUrl} alt={title} className="absolute inset-0 w-full h-full object-cover rounded-xl" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
           ) : null}
-          <div className={`flex items-center justify-center w-full h-full${animateIcon ? " spin-slow" : ""}`}>
+
+          <div
+            className={`relative flex items-center justify-center w-full h-full${animateIcon ? " spin-slow" : ""}`}
+            style={{ zIndex: 1 }}
+          >
             {itemIcon}
           </div>
         </div>
+
         <div className="flex flex-col gap-1 min-w-0">
           <h3 className="font-bold text-base text-foreground leading-tight">{title}</h3>
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">

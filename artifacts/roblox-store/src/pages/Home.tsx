@@ -299,6 +299,7 @@ export default function Home() {
               itemIcon={<FedoraIcon />}
               onBuy={() => setBuyPkg({ amount: "24,000", original: "22,500", price: "₱13.6k" })}
               animateIcon
+              glowColor="#3b82f6"
             />
             <AvatarItemCard
               title="Wings of the Sun and Moon"
@@ -309,6 +310,7 @@ export default function Home() {
               itemIcon={<SunMoonWingsIcon />}
               onBuy={() => setBuyPkg({ amount: "11,000", original: "10,000", price: "₱6,800.00" })}
               animateIcon
+              glowColor="#f59e0b"
             />
           </div>
         </section>
