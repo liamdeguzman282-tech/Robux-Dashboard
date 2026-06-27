@@ -18,7 +18,10 @@ export default function AvatarItemCard({ title, value, original, price, imageUrl
       className="w-full rounded-2xl bg-card border border-card-border overflow-hidden"
     >
       <div className="flex items-center gap-4 p-4">
-        <div className="w-20 h-20 rounded-xl bg-secondary flex items-center justify-center shrink-0 overflow-hidden border border-border">
+        <div
+          className="w-20 h-20 rounded-xl bg-secondary flex items-center justify-center shrink-0 overflow-hidden border border-border"
+          style={animateIcon ? { perspective: "200px" } : undefined}
+        >
           {imageUrl ? (
             <img src={imageUrl} alt={title} className="w-full h-full object-cover" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
           ) : null}
